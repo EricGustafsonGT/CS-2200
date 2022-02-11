@@ -1,0 +1,14 @@
+CS 2200 Spring 2021
+Homework 2
+
+Name: Eric Gustafson
+GT Username: egustafson9
+
+Question 1
+----------
+
+lea $ra, 1
+br target
+
+
+Explanation: jalr is the jump and link instruction. It links the next instruction to the GPR (General Purpose Register) $ra and jumps to the location at GPR $at. Instead, since LEA does a PC offset, we can calculate the next instruction after jumping to be PC + 2, however, before the lea instruction is done the datapath will increment the PC by 1 so we only need to do lea 1 to account for this. After that, we just do "br target" to get to the target address
