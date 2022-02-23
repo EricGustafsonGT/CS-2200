@@ -20,16 +20,46 @@ int tests = 0;
 int main2(int argc, char *argv[]) {
     /* PART 1:
      * TODO 1: take in the command line arguments here
+     *
      * Any input from the l argument should be put into length variable as an int
      * If the user uses the t argument, then tests should be set to 1.
      * Using getopt() to take in the arguments is recommended, but not required.
      */
+    int option_index;
+
+    /* The breakdown: optstring for getopt, ":tl:",
+     *      1.) since ':' is the first character, any specified character option other than 't' and 'l' will make
+     *          optarg() return ':'
+     *      2.) 't' denotes that -t is a valid option
+     *      3.) "l:" denotes that -l is a valid option and that it must have an argument (as denoted by ':' following 't')
+     */
+    while ((option_index = getopt(argc, argv, ":tl:")) != -1) {
+        switch (option_index) {
+            case 't':
+                tests = 1;
+                break;
+            case 'l':
+                length = atoi(optarg); //atoi will convert optarg which is a string to an int. optarg holds -l argument
+                break;
+            default:
+                if (option_index == '?') {
+                    printf("ERROR: getopt() returned '?' ...  \"%s\" is not a valid option \n", argv[optind - 1]);
+                } else if (option_index == ':') {
+                    printf("ERROR: getopt() returned ':' meaning the %s option was expecting an argument and nothing was given\n",
+                           argv[optind - 2]);
+                }
+                return 1; //denote failure
+        }
+    }
+
+/*
     if (tests == 1) {
         run_tests();
     } else {
         char *message = generateMessage();
         printf("Message: %s\n", message);
     }
+    */
 
     return 0;
 }
@@ -53,7 +83,7 @@ int main2(int argc, char *argv[]) {
  * Generates a pseudo random message of the size passed in from the command line parameters.
  * This method only needs to work when the length of the message
  * is smaller than the length of the dictionary which -should- be 16.
- */
+ *
 char *generateMessage() {
     // Converts the dictionary array (provided in main.h) into an arraylist for easy access
     arraylist_t *dictionary_as_list = create_arraylist(dictionary_length);
@@ -111,3 +141,4 @@ char *generateMessage() {
 
     return string_message;
 }
+*/
