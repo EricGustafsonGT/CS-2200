@@ -1,3 +1,0 @@
-/Users/WelcomeBack/Documents/COMP SCI - C:C++/CS 2200/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/WelcomeBack/Documents/COMP SCI - C:C++/CS 2200/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/WelcomeBack/Documents/COMP SCI - C:C++/CS 2200/cmake-build-debug/CMakeFiles/CS_2200.dir
