@@ -1,6 +1,6 @@
 /**
- * Name: <your name>
- * GTID: <your GTID>
+ * Name: Eric Gustafson
+ * GTID: 903477896
  */
 
 /*
@@ -9,28 +9,24 @@
 
 #include "main.h"
 
+//USE THESE FOR TO-DO 1
 int length = 0;
 int tests = 0;
 
 /**
  * Generates a random string based on the size passed in through the parameter.
- *
+ * TODO: CHANGE THIS BACK TO "main"
  */
-int main(int argc, char *argv[])
-{
+int main2(int argc, char *argv[]) {
     /* PART 1:
-     * TODO: take in the comand line arguments here
+     * TODO 1: take in the command line arguments here
      * Any input from the l argument should be put into length variable as an int
      * If the user uses the t argument, then tests should be set to 1.
      * Using getopt() to take in the arguments is recommended, but not required.
      */
-
-    if (tests == 1)
-    {
+    if (tests == 1) {
         run_tests();
-    }
-    else
-    {
+    } else {
         char *message = generateMessage();
         printf("Message: %s\n", message);
     }
@@ -41,7 +37,7 @@ int main(int argc, char *argv[])
 /* PART 3: Bug Fixing
  * The GenerateMessage function below is so close to working! Arrg!
  * If only there were no seg faults!
- * TODO: Correct the seg faults so that the program runs.
+ * TODO 3: Correct the seg faults so that the program runs.
  * Using GDB is heavily recommended.
  *
  * Hint 1: The causes of segfaults may or may not be isolated to this file.
@@ -54,34 +50,30 @@ int main(int argc, char *argv[])
  */
 
 /**
- * Generates a pseudo random message of the size passed in from the comand line parameters.
+ * Generates a pseudo random message of the size passed in from the command line parameters.
  * This method only needs to work when the length of the message
- * is smaller than the length of the dicitonary which -should- be 16.
+ * is smaller than the length of the dictionary which -should- be 16.
  */
-char *generateMessage()
-{
+char *generateMessage() {
     // Converts the dictionary array (provided in main.h) into an arraylist for easy access
     arraylist_t *dictionary_as_list = create_arraylist(dictionary_length);
-    for (int i = 0; i < dictionary_length; i++)
-    {
+    for (int i = 0; i < dictionary_length; i++) {
         append(dictionary_as_list, dictionary[i]);
     }
 
     // Removes a word from the dictionary arraylist and adds that word to the end of the message array list
     arraylist_t *message = create_arraylist(length);
-    for (int i = 0; i < length; i++)
-    {
+    for (int i = 0; i < length; i++) {
         char *word = remove_from_index(dictionary_as_list, i % dictionary_as_list->size);
         add_at_index(message, word, i + 1);
     }
 
-    // Adds the word "half" at the half way point in the list (round down if half is not an integer)
+    // Adds the word "half" at the half-way point in the list (round down if half is not an integer)
     add_at_index(message, "Half", message->size / 2);
 
-    // Creates the the message as a string to be printed.
+    // Creates the message as a string to be printed.
     char *string_message = NULL;
-    for (int i = 0; i < length; i++)
-    {
+    for (int i = 0; i < length; i++) {
         // Removes the first word from the list
         char *word = remove_from_index(message, 0);
 
@@ -91,25 +83,21 @@ char *generateMessage()
         // Reserves the memory space in the heap
         string_message = realloc(string_message, new_size);
 
-        // Checks realloc is successful.
+        // Checks if realloc() is successful.
         // Hint: this if statement is bug free, it is good form to do this when you access the heap
-        if (string_message == NULL)
-        {
+        if (string_message == NULL) {
             fprintf(stderr, "OUT OF MEMORY");
             exit(1);
         }
 
         // If it is the first word, different steps need to be taken.
         // In this step we want to "zero out" the memory that we are using if this is the first word.
-        // Otherwise we want to append a space so that each word is not on top of each other.
+        // Otherwise, we want to append a space so that each word is not on top of each other.
         // Is there any other line where adding the first word needs some sort of check?
         // Hint: review the string methods documentation provided in pdf.
-        if (i == 0)
-        {
+        if (i == 0) {
             memset(string_message, 0, new_size);
-        }
-        else
-        {
+        } else {
             strcat(string_message, " ");
         }
         // Concatenates the word to the end of the string.

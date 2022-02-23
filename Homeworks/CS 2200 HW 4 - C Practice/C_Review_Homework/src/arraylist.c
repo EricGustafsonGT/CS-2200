@@ -1,6 +1,6 @@
 /**
- * Name: <your name>
- * GTID: <your GTID>
+ * Name: Eric Gustafson
+ * GTID: 903477896
  */
 
 /*  PART 2: A CS-2200 C implementation of the arraylist data structure.
