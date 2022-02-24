@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 //INCLUDE THE MAIN.C FILE OF THE ASSIGNMENT YOU'RE TRYING TO DO
 #include "Homeworks/CS 2200 HW 4 - C Practice/C_Review_Homework/src/main.c"
 

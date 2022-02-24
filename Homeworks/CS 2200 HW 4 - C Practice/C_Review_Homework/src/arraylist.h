@@ -21,7 +21,7 @@ typedef struct arraylist
 } arraylist_t;
 
 /**
- * Create an arraylist data structure with a backing  array of type char **
+ * Create an arraylist data structure with a backing array of type char **
  * (an array of char *). Both the backing array and the struct arraylist
  * must be freed after use.
  * Backing array must be located in the heap!
