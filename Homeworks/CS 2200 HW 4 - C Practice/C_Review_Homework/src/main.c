@@ -52,14 +52,14 @@ int main2(int argc, char *argv[]) {
         }
     }
 
-/*
+
     if (tests == 1) {
         run_tests();
     } else {
         char *message = generateMessage();
         printf("Message: %s\n", message);
     }
-    */
+
 
     return 0;
 }
@@ -83,7 +83,7 @@ int main2(int argc, char *argv[]) {
  * Generates a pseudo random message of the size passed in from the command line parameters.
  * This method only needs to work when the length of the message
  * is smaller than the length of the dictionary which -should- be 16.
- *
+ */
 char *generateMessage() {
     // Converts the dictionary array (provided in main.h) into an arraylist for easy access
     arraylist_t *dictionary_as_list = create_arraylist(dictionary_length);
@@ -141,4 +141,4 @@ char *generateMessage() {
 
     return string_message;
 }
-*/
+//*/
