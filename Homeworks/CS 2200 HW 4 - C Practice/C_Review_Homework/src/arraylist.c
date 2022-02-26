@@ -76,7 +76,7 @@ void add_at_index(arraylist_t *arraylist, char *data, int index) {
     }
 
     //shift data so we can insert the new data
-    for (uint i = arraylist->size - 1; i > index; i++) {
+    for (uint i = arraylist->size - 1; i > index; i--) {
         arraylist->backing_array[i] = arraylist->backing_array[i - 1];
     }
 

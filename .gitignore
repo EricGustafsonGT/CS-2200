@@ -1,5 +1,0 @@
-*.out
-
-cmake-build-debug
-.idea
-a.out.dSYM
