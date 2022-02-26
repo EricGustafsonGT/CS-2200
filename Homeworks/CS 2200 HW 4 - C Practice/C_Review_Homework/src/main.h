@@ -1,8 +1,7 @@
 /**
- * Name: <your name>
- * GTID: <your GTID>
+ * Name: Eric Gustafson
+ * GTID: 903477896
  */
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,3 +34,4 @@ char *dictionary[] = {
 
 int main(int argc, char *argv[]);
 char *generateMessage();
+

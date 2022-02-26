@@ -33,20 +33,19 @@
  */
 arraylist_t *create_arraylist(uint capacity) {
     //First let's allocate memory for the arraylist
-    arraylist_t  *list = malloc(sizeof(arraylist_t));
+    arraylist_t *list = calloc(1, sizeof(arraylist_t));
     if (list == NULL) {
         free(list);
         return NULL;
     }
 
-    list->backing_array = malloc(capacity * sizeof(char *));
+    list->backing_array = calloc(capacity, sizeof(char *));
     if (list->backing_array == NULL) {
         destroy(list);
         return NULL;
     }
 
     list->capacity = capacity;
-    list->size = capacity;
     return list;
 }
 
@@ -76,7 +75,7 @@ void add_at_index(arraylist_t *arraylist, char *data, int index) {
     }
 
     //shift data so we can insert the new data
-    for (uint i = arraylist->size - 1; i > index; i--) {
+    for (uint i = arraylist->size; i > index; i--) {
         arraylist->backing_array[i] = arraylist->backing_array[i - 1];
     }
 
@@ -129,7 +128,7 @@ void resize(arraylist_t *arraylist) {
     }
 
     //reallocate the arraylist pointer's buffer to the new capacity
-    arraylist = realloc(arraylist, arraylist->capacity * 2);
+    arraylist->backing_array = realloc(arraylist->backing_array, 2 * arraylist->capacity * sizeof(char *));
 
     //check if realloc() was not successful
     if (arraylist == NULL) {

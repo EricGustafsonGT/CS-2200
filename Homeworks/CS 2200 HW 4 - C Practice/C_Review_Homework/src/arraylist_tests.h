@@ -1,6 +1,6 @@
 /*
  * Header for testing the arraylists.
- * Editing this file in anyway is NOT neccessary.
+ * Editing this file in any way is NOT necessary.
  * Although feel free to add more tests if you'd like!
  */
 
