@@ -15,7 +15,7 @@ int tests = 0;
 
 /**
  * Generates a random string based on the size passed in through the parameter.
- * TODO: CHANGE THIS BACK TO "main"
+ * TODO: CHANGE THIS BACK TO "main" WHEN SUBMITTING
  */
 int main2(int argc, char *argv[]) {
     /* PART 1:
@@ -93,9 +93,10 @@ char *generateMessage() {
 
     // Removes a word from the dictionary arraylist and adds that word to the end of the message array list
     arraylist_t *message = create_arraylist(length);
+    char *word = NULL; //word was previously declared in for loop, I declared it out here
     for (int i = 0; i < length; i++) {
-        char *word = remove_from_index(dictionary_as_list, i % dictionary_as_list->size);
-        add_at_index(message, word, i + 1);
+        word = remove_from_index(dictionary_as_list, i % dictionary_as_list->size);
+        add_at_index(message, word, i); //ORIGINALLY THE 3rd PARAMETER WAS i + 1, SHOULD BE JUST i
     }
 
     // Adds the word "half" at the half-way point in the list (round down if half is not an integer)
@@ -107,8 +108,10 @@ char *generateMessage() {
         // Removes the first word from the list
         char *word = remove_from_index(message, 0);
 
-        // Calculates the new size needed for string message for the word to be appended.
-        size_t new_size = strlen(string_message) + strlen(word) + 1;
+        // Calculates the new size needed for string message for the word to be appended. THIS IS CORRECT since
+        // strlen() does NOT include the null character when calculating string size. Therefore, we need to add 1 to
+        // the result for the new string's null character
+        size_t new_size = strlen(word) + 1 + ((string_message != NULL) ? strlen(string_message) : 0);
 
         // Reserves the memory space in the heap
         string_message = realloc(string_message, new_size);
@@ -123,21 +126,22 @@ char *generateMessage() {
         // If it is the first word, different steps need to be taken.
         // In this step we want to "zero out" the memory that we are using if this is the first word.
         // Otherwise, we want to append a space so that each word is not on top of each other.
-        // Is there any other line where adding the first word needs some sort of check?
+        // Is there any other line where adding the first word needs some sort of check? Yes, it when we use new_size
         // Hint: review the string methods documentation provided in pdf.
         if (i == 0) {
-            memset(string_message, 0, new_size);
+            memset(string_message, 0, new_size); //could we also just calloc string_message when initializing it?
         } else {
             strcat(string_message, " ");
         }
         // Concatenates the word to the end of the string.
         strcat(string_message, word);
+        free(word);
     }
 
     destroy(dictionary_as_list);
-    free(dictionary_as_list);
+    //free(dictionary_as_list);
     destroy(message);
-    free(message);
+    //free(message);
 
     return string_message;
 }

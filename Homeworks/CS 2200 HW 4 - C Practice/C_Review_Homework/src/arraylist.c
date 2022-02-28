@@ -102,17 +102,32 @@ void append(arraylist_t *arraylist, char *data) {
  */
 char *remove_from_index(arraylist_t *arraylist, int index) {
     if (arraylist == NULL) {
+        fprintf(stderr, "arraylist cannot be NULL when being passed into remove_from_index!");
+        return NULL;
+    } else if (arraylist->capacity < index) {
+        fprintf(stderr, "index cannot be greater than the capacity when adding!");
         return NULL;
     }
     char *element_to_remove = arraylist->backing_array[index];
 
     //shift all the elements back one
-    for (uint i = index; i < arraylist->size - 1; i++) {
-        arraylist->backing_array[i] = arraylist->backing_array[i + 1];
+    if (arraylist->size > 1) {
+        for (uint i = index; i < arraylist->size - 1; i++) {
+            arraylist->backing_array[i] = arraylist->backing_array[i + 1];
+        }
     }
-    arraylist->backing_array[arraylist->size] = NULL; //set last element to NULL since we have removed an element
 
-    arraylist->size--; //decrement the size by 1
+
+    //making sure the size is not zero, so we do not decrement the size to a negative number. This if statement SHOULD
+    // run if the size is 1
+    if (arraylist->size != 0) {
+        //free(arraylist->backing_array[arraylist->size - 1]);
+        arraylist->backing_array[arraylist->size - 1] = NULL; //set last element to NULL since we've removed an element
+        arraylist->size--; //decrement the size by 1
+    }
+
+
+
     return element_to_remove;
 }
 
@@ -127,11 +142,14 @@ void resize(arraylist_t *arraylist) {
         return;
     }
 
-    //reallocate the arraylist pointer's buffer to the new capacity
-    arraylist->backing_array = realloc(arraylist->backing_array, 2 * arraylist->capacity * sizeof(char *));
+    //reallocate the arraylist pointer's buffer to double the capacity. The new size is represented as a ternary
+    // operator because if the passed-in arraylist_capacity is 0 then we will resize to 0. The ternary operator
+    // prevents this from being zero
+    size_t new_size = arraylist->capacity != 0 ? 2 * arraylist->capacity * sizeof(char *) : 1;
+    arraylist->backing_array = realloc(arraylist->backing_array, new_size);
 
     //check if realloc() was not successful
-    if (arraylist == NULL) {
+    if (arraylist->backing_array == NULL) {
         return;
     }
 
@@ -151,6 +169,9 @@ void destroy(arraylist_t *arraylist) {
     //Free the allocated memory. THE BACKING ARRAY MUST BE FREED FIRST. The reason for this is because if we free
     //the list first, then we cannot free the backing array because we have lost the pointer to the list which points
     //the pointer to the backing array.
+//    for (int i = 0; i < arraylist->size; i++) {
+//        free(arraylist->backing_array[i]);
+//    }
     free(arraylist->backing_array);
     free(arraylist);
 }
