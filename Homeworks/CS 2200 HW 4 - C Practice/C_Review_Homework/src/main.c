@@ -17,7 +17,7 @@ int tests = 0;
  * Generates a random string based on the size passed in through the parameter.
  * TODO: CHANGE THIS BACK TO "main" WHEN SUBMITTING
  */
-int main2(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     /* PART 1:
      * TODO 1: take in the command line arguments here
      *
@@ -135,7 +135,6 @@ char *generateMessage() {
         }
         // Concatenates the word to the end of the string.
         strcat(string_message, word);
-        free(word);
     }
 
     destroy(dictionary_as_list);
