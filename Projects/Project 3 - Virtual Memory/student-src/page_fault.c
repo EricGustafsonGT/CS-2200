@@ -1,7 +1,12 @@
-#include "mmu.h"
-#include "pagesim.h"
-#include "swapops.h"
-#include "stats.h"
+/* MAKE SURE THESE NEXT LINES ARE UNCOMMENTED WHEN SUBMITTING*/
+
+//#include "mmu.h"
+//#include "pagesim.h"
+//#include "swapops.h"
+//#include "stats.h"
+
+//THIS NEXT LINE MUST BE UNCOMMENTED TO RUN THIS SIMULATOR BUT MUST BE COMMENTED WHEN SUBMITTING
+#include "../project3headertomakeeverythingwork.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"

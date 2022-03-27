@@ -13,9 +13,24 @@
 int length = 0;
 int tests = 0;
 
+/*
+ * TO RUN THIS FILE COPY THE FOLLOWING CODE INTO THE "main.c" FILE THAT IS IN THE OVERARCHING "CS 2200" DIRECTORY:
+ *
+
+#include "Homeworks/CS 2200 HW 4 - C Practice/C_Review_Homework/src/testing_header.h"
+
+int main(int argc, char *argv[])  {
+    main2(argc, argv);
+    return 1;
+}
+
+ * MAKE SURE THIS IS THE ONLY CODE IN THE FILE.
+ */
+
 /**
  * Generates a random string based on the size passed in through the parameter.
  * TODO: CHANGE THIS BACK TO "main" WHEN SUBMITTING
+ * IF YOU WANT TO RUN THIS FROM CLION CHANGE THIS FUNCTION NAME TO "main2" INSTEAD OF "main"
  */
 int main(int argc, char *argv[]) {
     /* PART 1:

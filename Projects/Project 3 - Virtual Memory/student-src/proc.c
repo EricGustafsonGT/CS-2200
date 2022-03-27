@@ -1,9 +1,12 @@
-#include "proc.h"
-#include "mmu.h"
-#include "pagesim.h"
-#include "va_splitting.h"
-#include "swapops.h"
-#include "stats.h"
+//#include "proc.h"
+//#include "mmu.h"
+//#include "pagesim.h"
+//#include "va_splitting.h"
+//#include "swapops.h"
+//#include "stats.h"
+
+//THIS NEXT LINE MUST BE UNCOMMENTED TO RUN THIS SIMULATOR BUT MUST BE COMMENTED WHEN SUBMITTING
+#include "../project3headertomakeeverythingwork.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
@@ -26,10 +29,18 @@
  * ----------------------------------------------------------------------------------
  */
 void proc_init(pcb_t *proc) {
-    // TODO: initialize proc's page table.
+    //Step 1.) Get a free frame to allocate
+    pfn_t ranme_to_be_allocated = free_frame();
+    memset(, 0, ); //The new frame might have been in use previously so we must reset its contents
+
+    //Step 2.) Update the frame table
+    frame_table
+
+    //Step 3.) Update the PCB
 }
 
 /**
+ * TODO 4: update any global vars and proc's PCB to match the context_switch.
  * --------------------------------- PROBLEM 4 --------------------------------------
  * Checkout PDF section 5 for this problem
  * 
@@ -47,10 +58,12 @@ void proc_init(pcb_t *proc) {
  * ----------------------------------------------------------------------------------
  */
 void context_switch(pcb_t *proc) {
-    // TODO: update any global vars and proc's PCB to match the context_switch.
+
+
 }
 
 /**
+ * // TODO 8 : Iterate the proc's page table and clean up each valid page
  * --------------------------------- PROBLEM 8 --------------------------------------
  * Checkout PDF section 8 for this problem
  * 
@@ -64,7 +77,7 @@ void context_switch(pcb_t *proc) {
  * ----------------------------------------------------------------------------------
  */
 void proc_cleanup(pcb_t *proc) {
-    // TODO: Iterate the proc's page table and clean up each valid page
+
     for (size_t i = 0; i < NUM_PAGES; i++) {
 
     }

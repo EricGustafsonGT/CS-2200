@@ -1,9 +1,9 @@
 #pragma once
 
-#include "swap.h"
-#include "types.h"
-#include "pagesim.h"
-#include "va_splitting.h"
+//#include "swap.h"
+//#include "types.h"
+//#include "pagesim.h"
+//#include "../student-src/va_splitting.h"  //was originally #include "va_splitting.h"
 
 /**
  * An entry in the frame table.

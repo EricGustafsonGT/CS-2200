@@ -1,9 +1,14 @@
-#include "types.h"
-#include "pagesim.h"
-#include "mmu.h"
-#include "swapops.h"
-#include "stats.h"
-#include "util.h"
+/* MAKE SURE THESE NEXT LINES ARE UNCOMMENTED WHEN SUBMITTING*/
+
+//#include "types.h"
+//#include "pagesim.h"
+//#include "mmu.h"
+//#include "swapops.h"
+//#include "stats.h"
+//#include "util.h"
+
+//THIS NEXT LINE MUST BE UNCOMMENTED TO RUN THIS SIMULATOR BUT MUST BE COMMENTED WHEN SUBMITTING
+#include "../project3headertomakeeverythingwork.h"
 
 pfn_t select_victim_frame(void);
 

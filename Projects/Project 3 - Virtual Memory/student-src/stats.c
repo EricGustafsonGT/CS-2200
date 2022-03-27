@@ -1,4 +1,4 @@
-#include "stats.h"
+#include "../simulator-src/stats.h"
 
 /* The stats. See the definition in stats.h. */
 stats_t stats;
@@ -7,7 +7,7 @@ stats_t stats;
  * --------------------------------- PROBLEM 10 --------------------------------------
  * Checkout PDF section 10 for this problem
  * 
- * Calulate the total average time it takes for an access
+ * Calculate the total average time it takes for an access
  * 
  * HINTS:
  * 		- You may find the #defines in the stats.h file useful.

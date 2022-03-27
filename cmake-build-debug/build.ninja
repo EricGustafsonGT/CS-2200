@@ -96,6 +96,60 @@ build CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homewo
   OBJECT_DIR = CMakeFiles/CS_2200.dir
   OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src
 
+build CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/pagesim.c.o: C_COMPILER__CS_2200_Debug /home/eric/Documents/COMP$ SCI$ C-C++/CS$ 2200/Projects/Project$ 3$ -$ Virtual$ Memory/simulator-src/pagesim.c || cmake_object_order_depends_target_CS_2200
+  DEP_FILE = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/pagesim.c.o.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles/CS_2200.dir
+  OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src
+
+build CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swap.c.o: C_COMPILER__CS_2200_Debug /home/eric/Documents/COMP$ SCI$ C-C++/CS$ 2200/Projects/Project$ 3$ -$ Virtual$ Memory/simulator-src/swap.c || cmake_object_order_depends_target_CS_2200
+  DEP_FILE = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swap.c.o.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles/CS_2200.dir
+  OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src
+
+build CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swapops.c.o: C_COMPILER__CS_2200_Debug /home/eric/Documents/COMP$ SCI$ C-C++/CS$ 2200/Projects/Project$ 3$ -$ Virtual$ Memory/simulator-src/swapops.c || cmake_object_order_depends_target_CS_2200
+  DEP_FILE = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swapops.c.o.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles/CS_2200.dir
+  OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src
+
+build CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/util.c.o: C_COMPILER__CS_2200_Debug /home/eric/Documents/COMP$ SCI$ C-C++/CS$ 2200/Projects/Project$ 3$ -$ Virtual$ Memory/simulator-src/util.c || cmake_object_order_depends_target_CS_2200
+  DEP_FILE = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/util.c.o.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles/CS_2200.dir
+  OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src
+
+build CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/mmu.c.o: C_COMPILER__CS_2200_Debug /home/eric/Documents/COMP$ SCI$ C-C++/CS$ 2200/Projects/Project$ 3$ -$ Virtual$ Memory/student-src/mmu.c || cmake_object_order_depends_target_CS_2200
+  DEP_FILE = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/mmu.c.o.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles/CS_2200.dir
+  OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src
+
+build CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/page_replacement.c.o: C_COMPILER__CS_2200_Debug /home/eric/Documents/COMP$ SCI$ C-C++/CS$ 2200/Projects/Project$ 3$ -$ Virtual$ Memory/student-src/page_replacement.c || cmake_object_order_depends_target_CS_2200
+  DEP_FILE = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/page_replacement.c.o.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles/CS_2200.dir
+  OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src
+
+build CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/proc.c.o: C_COMPILER__CS_2200_Debug /home/eric/Documents/COMP$ SCI$ C-C++/CS$ 2200/Projects/Project$ 3$ -$ Virtual$ Memory/student-src/proc.c || cmake_object_order_depends_target_CS_2200
+  DEP_FILE = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/proc.c.o.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles/CS_2200.dir
+  OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src
+
+build CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/page_fault.c.o: C_COMPILER__CS_2200_Debug /home/eric/Documents/COMP$ SCI$ C-C++/CS$ 2200/Projects/Project$ 3$ -$ Virtual$ Memory/student-src/page_fault.c || cmake_object_order_depends_target_CS_2200
+  DEP_FILE = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/page_fault.c.o.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles/CS_2200.dir
+  OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src
+
+build CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/stats.c.o: C_COMPILER__CS_2200_Debug /home/eric/Documents/COMP$ SCI$ C-C++/CS$ 2200/Projects/Project$ 3$ -$ Virtual$ Memory/student-src/stats.c || cmake_object_order_depends_target_CS_2200
+  DEP_FILE = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/stats.c.o.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles/CS_2200.dir
+  OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target CS_2200
@@ -104,7 +158,7 @@ build CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homewo
 #############################################
 # Link the executable CS_2200
 
-build CS_2200: C_EXECUTABLE_LINKER__CS_2200_Debug CMakeFiles/CS_2200.dir/main.c.o CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/main.c.o CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist.c.o CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist_tests.c.o
+build CS_2200: C_EXECUTABLE_LINKER__CS_2200_Debug CMakeFiles/CS_2200.dir/main.c.o CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/main.c.o CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist.c.o CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist_tests.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/pagesim.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swap.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swapops.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/util.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/mmu.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/page_replacement.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/proc.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/page_fault.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/stats.c.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/CS_2200.dir
   POST_BUILD = :

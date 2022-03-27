@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mmu.h"
+#include "../simulator-src/mmu.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
@@ -16,14 +16,24 @@
  *      implementing these functions.
  * ----------------------------------------------------------------------------------
  */
+
+/**
+ * TODO 1.1: return the VPN from virtual address addr.
+ * @param addr virtual address
+ * @return the page offset (last 14-bits)
+ */
 static inline vpn_t vaddr_vpn(vaddr_t addr) {
-    // TODO: return the VPN from virtual address addr.
-    return 0;
+    return addr >> OFFSET_LEN;
 }
 
+/**
+ * TODO 1.2: return the offset into the frame from virtual address addr.
+ *
+ * @param addr virtual address
+ * @return virtual page number (VPN) (first 10-bits)
+ */
 static inline uint16_t vaddr_offset(vaddr_t addr) {
-    // TODO: return the offset into the frame from virtual address addr.
-    return 0;
+    return addr & 0b111111111100000000000000;
 }
 
 #pragma GCC diagnostic pop
