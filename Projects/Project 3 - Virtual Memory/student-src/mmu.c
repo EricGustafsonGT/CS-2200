@@ -16,6 +16,7 @@
 fte_t *frame_table;
 
 /**
+ * TODO 2: initialize system
  * --------------------------------- PROBLEM 2 --------------------------------------
  * Checkout PDF sections 4 for this problem
  * 
@@ -36,6 +37,7 @@ void system_init(void) {
 }
 
 /**
+ * TODO 5: translate virtual address to physical, then perfrom the specified operation
  * --------------------------------- PROBLEM 5 --------------------------------------
  * Checkout PDF section 6 for this problem
  * 
@@ -52,8 +54,6 @@ void system_init(void) {
  * ----------------------------------------------------------------------------------
  */
 uint8_t mem_access(vaddr_t addr, char rw, uint8_t data) {
-    // TODO: translate virtual address to physical, then perfrom the specified operation
-
     /* Either read or write the data to the physical address
        depending on 'rw' */
     if (rw == 'r') {

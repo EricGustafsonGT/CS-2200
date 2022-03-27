@@ -30,13 +30,23 @@
  */
 void proc_init(pcb_t *proc) {
     //Step 1.) Get a free frame to allocate
-    pfn_t ranme_to_be_allocated = free_frame();
-    memset(, 0, ); //The new frame might have been in use previously so we must reset its contents
+    pfn_t frame_number_to_be_allocated = free_frame();
+
+    //Each frame contains PAGE_SIZE bytes of data, therefore to access the start of the i-th frame in memory, you
+    //can use mem + (i * PAGE_SIZE). Here, the frame number we just got is the "i" in the formula. The defined
+    //macro function MEMORY_LOC_PFN does PAGE_SIZE * pfn (basically the macro function calculates the physical address)
+    fte_t *fn_address = &frame_table[MEMORY_LOC_OF_PFN(frame_number_to_be_allocated)];
+    memset(fn_address, 0, PAGE_SIZE); //The new frame might have been in use previously so we must reset its contents
 
     //Step 2.) Update the frame table
-    frame_table
+    //we don't want to evict the frame containing the page table of a running process so this frame is protected
+    frame_table[MEMORY_LOC_OF_PFN(frame_number_to_be_allocated)].protected = 0x1;
+    frame_table[MEMORY_LOC_OF_PFN(frame_number_to_be_allocated)].process = proc;
+    frame_table[MEMORY_LOC_OF_PFN(frame_number_to_be_allocated)].vpn = 0; //0 since the first frame of every process
+                                                                          //is its page table
 
     //Step 3.) Update the PCB
+    proc->saved_ptbr = frame_number_to_be_allocated; //we DON'T want MEMORY_LOC_OF_PFN(pfn) here; we want just the pfn
 }
 
 /**
@@ -58,8 +68,8 @@ void proc_init(pcb_t *proc) {
  * ----------------------------------------------------------------------------------
  */
 void context_switch(pcb_t *proc) {
-
-
+    PTBR = proc->saved_ptbr; //switch the PTBR to the passed in processes PTBR
+    current_process = proc; //set the current process to the new process . not sure if I need to do this here
 }
 
 /**

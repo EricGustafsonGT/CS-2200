@@ -15,6 +15,7 @@ pfn_t select_victim_frame(void);
 pfn_t last_evicted = 0;
 
 /**
+ * TODO 7: evict any mapped pages.
  * --------------------------------- PROBLEM 7 --------------------------------------
  * Checkout PDF section 7 for this problem
  * 
@@ -46,6 +47,7 @@ pfn_t free_frame(void) {
 
 
 /**
+ * TODO 9: Selection of the Victim Frame
  * --------------------------------- PROBLEM 9 --------------------------------------
  * Checkout PDF section 7, 9, and 11 for this problem
  * 

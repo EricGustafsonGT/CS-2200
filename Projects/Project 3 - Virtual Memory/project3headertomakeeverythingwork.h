@@ -20,4 +20,5 @@
 
 #include "student-src/va_splitting.h"
 
-#endif //HEADER_H
+
+#endif

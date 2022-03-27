@@ -19,10 +19,13 @@
 #define PAGE_SIZE (1 << OFFSET_LEN)
 /* Total size of physical memory */
 #define MEM_SIZE (1 << PADDR_LEN)
-/* Toal number of pages in virtual address space */
+/* Total number of pages in virtual address space */
 #define NUM_PAGES (1 << (VADDR_LEN - OFFSET_LEN))
-/* Toal number of pages in physical address space */
+/* Total number of pages in physical address space */
 #define NUM_FRAMES (1 << (PADDR_LEN - OFFSET_LEN))
+
+/*ERIC ADDED HELPER DEFINE:*/
+#define MEMORY_LOC_OF_PFN(pfn) (PAGE_SIZE * pfn)
 
 /* Different replacement strategies */
 #define RANDOM 1
