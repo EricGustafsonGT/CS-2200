@@ -200,7 +200,7 @@ void sim_start_proc(uint32_t pid)
 /* stop a process and cleanup its memory */
 void sim_stop_proc(uint32_t pid)
 {
-    /* clean up the memory footprints of procs[pid] student implmented proc_cleanup() */
+    /* clean up the memory footprints of procs[pid] student implemented proc_cleanup() */
     proc_cleanup(&procs[pid]);
     procs[pid].saved_ptbr = 0;
     procs[pid].state = PROC_STOPPED;

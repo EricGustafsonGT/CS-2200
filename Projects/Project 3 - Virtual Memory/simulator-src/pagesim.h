@@ -25,7 +25,7 @@
 #define NUM_FRAMES (1 << (PADDR_LEN - OFFSET_LEN))
 
 /*ERIC ADDED HELPER DEFINE:*/
-#define MEMORY_LOC_OF_PFN(pfn) (PAGE_SIZE * pfn)
+#define MEMORY_LOC_OF_PFN(pfn) (mem + (PAGE_SIZE * pfn)) //the physical memory location of the PFN
 
 /* Different replacement strategies */
 #define RANDOM 1

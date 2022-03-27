@@ -31,13 +31,12 @@ fte_t *frame_table;
  */
 void system_init(void) {
     frame_table = (fte_t *) mem;
-    memset(frame_table, 0, PAGE_SIZE);
-    frame_table->protected = 0x1;
-
+    memset(frame_table, 0, PAGE_SIZE); //just making sure the frame_table entries are initialized to zero
+    frame_table->protected = 0x1; //Set frame table to protected (we don't want to evict this!)
 }
 
 /**
- * TODO 5: translate virtual address to physical, then perfrom the specified operation
+ * TODO 5: translate virtual address to physical, then perform the specified operation
  * --------------------------------- PROBLEM 5 --------------------------------------
  * Checkout PDF section 6 for this problem
  * 
@@ -49,11 +48,13 @@ void system_init(void) {
  *             Otherwise NULL for read accesses.
  * 
  * HINTS:
- *      - Remember that not all the entry in the process's page table are mapped in. 
+ *      - Remember that not all the entries in the process's page table are mapped in.
  *      Check what in the pte_t struct signals that the entry is mapped in memory.
  * ----------------------------------------------------------------------------------
  */
 uint8_t mem_access(vaddr_t addr, char rw, uint8_t data) {
+    pte_t *pgtable = (pte_t *) MEMORY_LOC_OF_PFN(PTBR);
+
     /* Either read or write the data to the physical address
        depending on 'rw' */
     if (rw == 'r') {

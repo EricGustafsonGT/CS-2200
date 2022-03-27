@@ -27,7 +27,7 @@
  *      - You are not guaranteed that the memory returned by the free frame allocator
  *      is empty - an existing frame could have been evicted for our new page table.
  * ----------------------------------------------------------------------------------
- */
+ */   //(pte_t *)(mem + (found_ptbr * PAGE_SIZE)); 290
 void proc_init(pcb_t *proc) {
     //Step 1.) Get a free frame to allocate
     pfn_t frame_number_to_be_allocated = free_frame();
@@ -35,14 +35,14 @@ void proc_init(pcb_t *proc) {
     //Each frame contains PAGE_SIZE bytes of data, therefore to access the start of the i-th frame in memory, you
     //can use mem + (i * PAGE_SIZE). Here, the frame number we just got is the "i" in the formula. The defined
     //macro function MEMORY_LOC_PFN does PAGE_SIZE * pfn (basically the macro function calculates the physical address)
-    fte_t *fn_address = &frame_table[MEMORY_LOC_OF_PFN(frame_number_to_be_allocated)];
-    memset(fn_address, 0, PAGE_SIZE); //The new frame might have been in use previously so we must reset its contents
+    memset(MEMORY_LOC_OF_PFN(frame_number_to_be_allocated), 0, PAGE_SIZE); //The new frame might have been in use previously so we must reset
+    // its contents
 
     //Step 2.) Update the frame table
     //we don't want to evict the frame containing the page table of a running process so this frame is protected
-    frame_table[MEMORY_LOC_OF_PFN(frame_number_to_be_allocated)].protected = 0x1;
-    frame_table[MEMORY_LOC_OF_PFN(frame_number_to_be_allocated)].process = proc;
-    frame_table[MEMORY_LOC_OF_PFN(frame_number_to_be_allocated)].vpn = 0; //0 since the first frame of every process
+    frame_table[frame_number_to_be_allocated].protected = 0x1;
+    frame_table[frame_number_to_be_allocated].process = proc;
+    frame_table[frame_number_to_be_allocated].vpn = 0; //0 since the first frame of every process
                                                                           //is its page table
 
     //Step 3.) Update the PCB
