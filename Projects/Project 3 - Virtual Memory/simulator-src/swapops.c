@@ -8,7 +8,10 @@ swap_queue_t swap_queue;
 /**
  * Reads bytes from a page table entry's swap entry into physical
  * memory. Copies PAGE_SIZE bytes from swap to memory starting at dst.
- * A better name for this function would be swap_read_to_disk()
+ *
+ * Eric's notes: basically this function takes the contents of a page that
+ * got moved to the "swap space" and puts it back in physical memory.
+ * A better name for this function would be swap_read_from_disk()
  *
  * @param entry a pointer to the page table entry
  * @param dst the destination to which bytes read from swap should be
@@ -33,6 +36,9 @@ void swap_read(pte_t *pte, void *dst) {
  * will be allocated. This entry must later be freed with swap_free to
  * avoid a memory leak. The page table entry's swap field is updated
  * automatically.
+ *
+ * Basically, we are writing to the swap space because we need to free frames
+ * in physical memory
  *
  * @param entry a pointer to the page table entry
  * @param src the source address from which bytes should be copied

@@ -39,10 +39,13 @@ pfn_t free_frame(void) {
     if (frame_table[victim_pfn].mapped) {
         pte_t *page_table_entry = (pte_t *) MEMORY_LOC_OF_PFN(frame_table[victim_pfn].process->saved_ptbr);
         page_table_entry->valid = 0x0;
+
+        //has the page been written to since being created or loaded from the swap space?
         if (page_table_entry->dirty) {
+            //yes, the page has been written to. We need to put this page in the swap space.
+            page_table_entry->dirty = 0x0; //page is no longer dirty since we are writing it to the swap space
             swap_write(page_table_entry, MEMORY_LOC_OF_PFN(victim_pfn));
-            page_table_entry->dirty = 0x0;
-        }
+        } //else the page was not written to so no data is lost if we overwrite it
 
         frame_table[victim_pfn].mapped = 0x0;
     }

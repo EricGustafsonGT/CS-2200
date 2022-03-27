@@ -87,10 +87,17 @@ void context_switch(pcb_t *proc) {
  * ----------------------------------------------------------------------------------
  */
 void proc_cleanup(pcb_t *proc) {
+    pte_t *pgtable = (pte_t *) MEMORY_LOC_OF_PFN(proc->saved_ptbr);
 
+    //iterate through the frame table, checking if each frame table entry is of the same PID that the dead process's
+    //PID is. If it is, we get the PFN of that frame table entry and go ahead and clear the memory in that physical
+    //frame and clear the frame table entry.
     for (size_t i = 0; i < NUM_PAGES; i++) {
 
     }
+
+
+
 }
 
 #pragma GCC diagnostic pop
