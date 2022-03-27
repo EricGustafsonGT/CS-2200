@@ -33,13 +33,26 @@
  */
 void page_fault(vaddr_t addr) {
    // TODO: Get a new frame, then correctly update the page table and frame table
+    pte_t *pgtable = (pte_t *) MEMORY_LOC_OF_PFN(PTBR); //an array of page table entries (instead of PTBR should it
+    // be current_process.ptbr?
+    pte_t *page_table_entry = (pte_t *) pgtable + vaddr_vpn(addr); //a pointer to a specific page table entry
+    pfn_t new_frame = free_frame();
 
-
-   if(swap_exists(NULL)){
-
+    //swap_exists() takes in a page table entry (pte_t)
+   if(swap_exists(page_table_entry)) {
+       swap_read(page_table_entry, MEMORY_LOC_OF_PFN(new_frame));
    } else {
-
+        memset(MEMORY_LOC_OF_PFN(new_frame), 0, PAGE_SIZE);
    }
+
+   //update the processes' page table
+   page_table_entry->valid = 0x1; //also not sure about this line
+//   page_table_entry->dirty = 0x0; //not sure about this line
+   page_table_entry->pfn = new_frame; //not sure about this one
+
+   //update the frame table
+   frame_table[new_frame].process = current_process;
+   frame_table[new_frame].vpn = vaddr_vpn(addr);
 }
 
 #pragma GCC diagnostic pop

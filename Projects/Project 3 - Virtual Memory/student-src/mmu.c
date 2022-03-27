@@ -46,6 +46,7 @@ void system_init(void) {
  * @param rw   'r' if the access is a read, 'w' if a write
  * @param data If the access is a write, one byte of data to write to our memory.
  *             Otherwise NULL for read accesses.
+ * @return value at the physical address (the physical address that is mapped from the VPN)
  * 
  * HINTS:
  *      - Remember that not all the entries in the process's page table are mapped in.
@@ -54,14 +55,27 @@ void system_init(void) {
  */
 uint8_t mem_access(vaddr_t addr, char rw, uint8_t data) {
     pte_t *pgtable = (pte_t *) MEMORY_LOC_OF_PFN(PTBR);
+    pte_t page_table_entry = pgtable[vaddr_vpn(addr)];
+    pfn_t page = page_table_entry.pfn;
+    uint8_t *physical_memory_location_ptr = MEMORY_LOC_OF_PFN(page) + vaddr_offset(addr);
+
+    //check if the page is valid (if not throw page fault to fix it)
+    if (!page_table_entry.valid) {
+        page_fault(addr); //handle the page fault
+    }
 
     /* Either read or write the data to the physical address
        depending on 'rw' */
     if (rw == 'r') {
-
-    } else {
-
+        //nothing
+    } else { //else write to memory
+        *physical_memory_location_ptr = data;
+        page_table_entry.dirty = 0x1;
     }
 
-    return 0;
+    //mark the page (PFN) as recently visited
+    frame_table[page].referenced = 0x1;
+
+    return *physical_memory_location_ptr;
+//    return 0;
 }

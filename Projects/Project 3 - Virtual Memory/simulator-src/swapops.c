@@ -8,6 +8,7 @@ swap_queue_t swap_queue;
 /**
  * Reads bytes from a page table entry's swap entry into physical
  * memory. Copies PAGE_SIZE bytes from swap to memory starting at dst.
+ * A better name for this function would be swap_read_to_disk()
  *
  * @param entry a pointer to the page table entry
  * @param dst the destination to which bytes read from swap should be

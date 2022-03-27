@@ -23,7 +23,7 @@ pfn_t last_evicted = 0;
  * to identify an "available" frame in the system (already given). You will need to 
  * check to see if this frame is already mapped in, and if it is, you need to evict it.
  * 
- * @return victim_pfn: a phycial frame number to a free frame be used by other functions.
+ * @return victim_pfn: a physical frame number to a free frame be used by other functions.
  * 
  * HINTS:
  *      - When evicting pages, remember what you checked for to trigger page faults 
@@ -33,12 +33,18 @@ pfn_t last_evicted = 0;
  * ----------------------------------------------------------------------------------
  */
 pfn_t free_frame(void) {
-    pfn_t victim_pfn;
-    victim_pfn = select_victim_frame();
+    pfn_t victim_pfn = select_victim_frame();
 
     // TODO: evict any mapped pages.
     if (frame_table[victim_pfn].mapped) {
+        pte_t *page_table_entry = (pte_t *) MEMORY_LOC_OF_PFN(frame_table[victim_pfn].process->saved_ptbr);
+        page_table_entry->valid = 0x0;
+        if (page_table_entry->dirty) {
+            swap_write(page_table_entry, MEMORY_LOC_OF_PFN(victim_pfn));
+            page_table_entry->dirty = 0x0;
+        }
 
+        frame_table[victim_pfn].mapped = 0x0;
     }
 
     return victim_pfn;
