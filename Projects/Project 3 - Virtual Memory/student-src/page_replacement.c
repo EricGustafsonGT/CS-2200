@@ -12,7 +12,7 @@
 
 pfn_t select_victim_frame(void);
 
-pfn_t last_evicted = 0;
+pfn_t last_evicted = 0; //basically the head to our circular queues for FIFO and CLOCK algo
 
 /**
  * TODO 7: evict any mapped pages.
@@ -104,10 +104,31 @@ pfn_t select_victim_frame() {
 
     } else if (replacement == FIFO) {
         // TODO 9.2: Implement a FIFO algorithm here
+        if (frame_table[last_evicted].protected == 0) {
+            return last_evicted;
+        }
 
+        if (frame_table[last_evicted + 1].process != NULL) {
+            last_evicted++;
+        } else {
+            last_evicted = 0;
+        }
     } else if (replacement == CLOCKSWEEP) {
         // TODO 9.1: Implement a clocksweep page replacement algorithm here
+        for (size_t i = 0; i < num_entries; i++) { //start at one since the frame table is technically at 1
+            if (frame_table[last_evicted].protected == 0 && frame_table[last_evicted].referenced == 0) {
+                return last_evicted;
+            } else if (frame_table[last_evicted].protected == 0 && frame_table[last_evicted].referenced == 1) {
+                frame_table[last_evicted].referenced = 0x0; //reset reference bit
+            }
 
+
+            if (frame_table[last_evicted + 1].process != NULL) {
+                last_evicted++;
+            } else {
+                last_evicted = 0;
+            }
+        }
     }
 
     /* If every frame is protected, give up. This should never happen

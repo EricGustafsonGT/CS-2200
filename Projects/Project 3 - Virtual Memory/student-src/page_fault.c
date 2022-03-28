@@ -35,7 +35,11 @@ void page_fault(vaddr_t addr) {
    // TODO: Get a new frame, then correctly update the page table and frame table
     pte_t *pgtable = (pte_t *) MEMORY_LOC_OF_PFN(PTBR); //an array of page table entries (instead of PTBR should it
     // be current_process.ptbr?
-    pte_t *page_table_entry = (pte_t *) pgtable + vaddr_vpn(addr); //a pointer to a specific page table entry
+//    pte_t *page_table_entry = (pte_t *) (pgtable + (vaddr_vpn(addr) /*   * sizeof(pte_t) */)); //a pointer to a specific
+    // page
+    // table entry
+//    pte_t *page_table_entry = /*(pte_t *) */(pgtable + (vaddr_vpn(addr) * sizeof(pte_t)));
+    pte_t *page_table_entry = (pte_t *) (pgtable + vaddr_vpn(addr));
     pfn_t new_frame = free_frame();
 
     //So our page table entry caused a page fault...now we need to check if the reason for the page fault was
@@ -54,9 +58,12 @@ void page_fault(vaddr_t addr) {
    page_table_entry->pfn = new_frame; //not sure about this one
 
    //update the frame table
-    (frame_table + new_frame)->process = current_process;
-    (frame_table + new_frame)->vpn = vaddr_vpn(addr);
-    (frame_table + new_frame)->mapped = 0x1;
+//    (frame_table + new_frame)->process = current_process;
+//    (frame_table + new_frame)->vpn = vaddr_vpn(addr);
+//    (frame_table + new_frame)->mapped = 0x1;
+    frame_table[new_frame].process = current_process;
+    frame_table[new_frame].vpn = vaddr_vpn(addr);
+    frame_table[new_frame].mapped = 0x1;
 
     stats.page_faults++;
 }

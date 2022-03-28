@@ -92,7 +92,6 @@ void proc_cleanup(pcb_t *proc) {
 
 
     for (size_t i = 0; i < NUM_PAGES; i++) {
-
         if (pgtable[i].valid && swap_exists(pgtable + i)) {
             swap_free(pgtable + i);
         }
@@ -104,11 +103,16 @@ void proc_cleanup(pcb_t *proc) {
         //frame and clear the frame table entry.
         if (frame_table[i].process != NULL && //some frame table entries are not populated
             frame_table[i].process->pid == proc->pid) {
-            (frame_table + i)->process = NULL;
-            (frame_table + i)->protected = 0;
-            (frame_table + i)->mapped = 0;
-            (frame_table + i)->referenced = 0;
-            (frame_table + i)->vpn = 0;
+//            (frame_table + i)->process = NULL;
+//            (frame_table + i)->protected = 0;
+//            (frame_table + i)->mapped = 0;
+//            (frame_table + i)->referenced = 0;
+//            (frame_table + i)->vpn = 0;
+            frame_table[i].process = NULL;
+            frame_table[i].protected = 0;
+            frame_table[i].mapped = 0;
+            frame_table[i].referenced = 0;
+            frame_table[i].vpn = 0;
 //            memset(frame_table + i, 0, sizeof(pfn_t));
         }
     }

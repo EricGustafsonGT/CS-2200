@@ -10,7 +10,7 @@ swap_queue_t swap_queue;
  * memory. Copies PAGE_SIZE bytes from swap to memory starting at dst.
  *
  * Eric's notes: basically this function takes the contents of a page that
- * got moved to the "swap space" and puts it back in physical memory.
+ * got moved to the "swap space" and puts it back
  * A better name for this function would be swap_read_from_disk()
  *
  * @param entry a pointer to the page table entry

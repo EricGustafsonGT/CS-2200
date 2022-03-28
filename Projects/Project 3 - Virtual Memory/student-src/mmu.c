@@ -55,7 +55,8 @@ void system_init(void) {
  */
 uint8_t mem_access(vaddr_t addr, char rw, uint8_t data) {
     pte_t *pgtable = (pte_t *) MEMORY_LOC_OF_PFN(PTBR); //obtain page table from memory
-    pte_t *page_table_entry = pgtable + vaddr_vpn(addr);  //obtain index of page table
+//    pte_t *page_table_entry = /*(pte_t *)*/ (pgtable + (vaddr_vpn(addr) * sizeof(pte_t)));  //obtain index of page table
+    pte_t *page_table_entry = (pte_t *) (pgtable + vaddr_vpn(addr));
 
     //check if the page is valid (if not throw page fault to fix it)
     if (!page_table_entry->valid) {
