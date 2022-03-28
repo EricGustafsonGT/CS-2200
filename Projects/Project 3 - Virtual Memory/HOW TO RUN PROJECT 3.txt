@@ -1,0 +1,30 @@
+Use the provided makefile for this project. Everytime you see "make" in the instructions below just run the makefile
+configuration (currently called "Project 3 Configuration")
+
+
+
+
+1.) To run the project with any replacement algorithm, use any of the following:
+
+make
+./vm-sim -i traces/<NAME OF TRACE>.trace -<NAME OF ALGORITHM>
+
+for example,
+./vm-sim -i traces/simple.trace -rrandom
+./vm-sim -i traces/simple.trace -rclocksweep
+./vm-sim -i traces/perlbench.trace -rfifo
+
+
+
+
+2.) "One challenge of working with any memory-management system is that your system can easily corrupt its
+    own data structures if it misbehaves! Such corruption issues can easily hide until many cycles later, when
+    they manifest as seemingly unrelated crashes later.
+
+    To help with detecting these issues, we’ve included a “corruption check” mode that aggressively verifies your
+    data structures after every cycle. To use the corruption checker, run the simulator with the -c argument:"
+
+./vm-sim -c -i traces/<NAME OF TRACE>.trace -r<NAME OF ALGORITHM>
+
+for example,
+./vm-sim -c -i traces/simple.trace -rrandom

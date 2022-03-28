@@ -2,6 +2,7 @@
 
 #include "../simulator-src/mmu.h"
 
+//#include "mmu.h"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
@@ -35,7 +36,8 @@ static inline vpn_t vaddr_vpn(vaddr_t addr) {
  * @return virtual page number (VPN) (first 10-bits)
  */
 static inline uint16_t vaddr_offset(vaddr_t addr) {
-    return addr & 0b111111111100000000000000;
+    unsigned int bit_mask = 16383; // 0b000000000011111111111111;
+    return addr & bit_mask;
 }
 
 #pragma GCC diagnostic pop

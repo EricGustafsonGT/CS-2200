@@ -41,6 +41,7 @@ void proc_init(pcb_t *proc) {
     //Step 2.) Update the frame table
     //we don't want to evict the frame containing the page table of a running process so this frame is protected
     frame_table[frame_number_to_be_allocated].protected = 0x1;
+    frame_table[frame_number_to_be_allocated].mapped = 0x1;
     frame_table[frame_number_to_be_allocated].process = proc;
     frame_table[frame_number_to_be_allocated].vpn = 0; //0 since the first frame of every process
                                                                           //is its page table
@@ -89,11 +90,27 @@ void context_switch(pcb_t *proc) {
 void proc_cleanup(pcb_t *proc) {
     pte_t *pgtable = (pte_t *) MEMORY_LOC_OF_PFN(proc->saved_ptbr);
 
-    //iterate through the frame table, checking if each frame table entry is of the same PID that the dead process's
-    //PID is. If it is, we get the PFN of that frame table entry and go ahead and clear the memory in that physical
-    //frame and clear the frame table entry.
+
     for (size_t i = 0; i < NUM_PAGES; i++) {
 
+        if (pgtable[i].valid && swap_exists(pgtable + i)) {
+            swap_free(pgtable + i);
+        }
+        memset(pgtable + i, 0, sizeof(pte_t));
+
+
+        //iterate through the frame table, checking if each frame table entry is of the same PID that the dead process's
+        //PID is. If it is, we get the PFN of that frame table entry and go ahead and clear the memory in that physical
+        //frame and clear the frame table entry.
+        if (frame_table[i].process != NULL && //some frame table entries are not populated
+            frame_table[i].process->pid == proc->pid) {
+            (frame_table + i)->process = NULL;
+            (frame_table + i)->protected = 0;
+            (frame_table + i)->mapped = 0;
+            (frame_table + i)->referenced = 0;
+            (frame_table + i)->vpn = 0;
+//            memset(frame_table + i, 0, sizeof(pfn_t));
+        }
     }
 
 

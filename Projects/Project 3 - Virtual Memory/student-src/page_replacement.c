@@ -45,6 +45,8 @@ pfn_t free_frame(void) {
             //yes, the page has been written to. We need to put this page in the swap space.
             page_table_entry->dirty = 0x0; //page is no longer dirty since we are writing it to the swap space
             swap_write(page_table_entry, MEMORY_LOC_OF_PFN(victim_pfn));
+
+            stats.writebacks++;
         } //else the page was not written to so no data is lost if we overwrite it
 
         frame_table[victim_pfn].mapped = 0x0;
@@ -101,10 +103,10 @@ pfn_t select_victim_frame() {
 
 
     } else if (replacement == FIFO) {
-        // TODO: Implement a FIFO algorithm here
+        // TODO 9.2: Implement a FIFO algorithm here
 
     } else if (replacement == CLOCKSWEEP) {
-        // TODO: Implement a clocksweep page replacement algorithm here 
+        // TODO 9.1: Implement a clocksweep page replacement algorithm here
 
     }
 

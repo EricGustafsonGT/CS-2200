@@ -41,7 +41,7 @@ void page_fault(vaddr_t addr) {
     //So our page table entry caused a page fault...now we need to check if the reason for the page fault was
     //because the page was "swapped" out in memory by a different process. If it was, it resides in the "swap space"
     if(swap_exists(page_table_entry)) { //check if the faulting page was previously "swapped" out;
-            swap_read(page_table_entry, MEMORY_LOC_OF_PFN(new_frame));
+        swap_read(page_table_entry, MEMORY_LOC_OF_PFN(new_frame));
     } else {
         //The faulting page was NOT previously swapped; zero out the freed frame to prevent the current process from
         //potentially reading the memory of some other process
@@ -54,8 +54,11 @@ void page_fault(vaddr_t addr) {
    page_table_entry->pfn = new_frame; //not sure about this one
 
    //update the frame table
-   frame_table[new_frame].process = current_process;
-   frame_table[new_frame].vpn = vaddr_vpn(addr);
+    (frame_table + new_frame)->process = current_process;
+    (frame_table + new_frame)->vpn = vaddr_vpn(addr);
+    (frame_table + new_frame)->mapped = 0x1;
+
+    stats.page_faults++;
 }
 
 #pragma GCC diagnostic pop

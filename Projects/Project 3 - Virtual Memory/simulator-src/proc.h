@@ -3,7 +3,8 @@
 #include "swap.h"
 #include "types.h"
 #include "pagesim.h"
-#include "va_splitting.h"
+//#include "va_splitting.h"
+#include "../student-src/va_splitting.h"  //was originally #include "va_splitting.h"
 
 /**
  * Process functions.

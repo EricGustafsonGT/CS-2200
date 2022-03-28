@@ -14,8 +14,8 @@
 
 uint8_t *mem;                       // start of our simulated memory
 pfn_t PTBR;                         // page table base register
-pcb_t *current_process;             // currently running process
-uint8_t replacement = 0;            // page replacment policy
+pcb_t *current_process;             // the currently running process
+uint8_t replacement = 0;            // page replacement policy
 timestamp_t step = 0;               // current number of steps in the program
 
 uint8_t check_corruption = 0;       // the corruption checker flag is set  
