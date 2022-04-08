@@ -14,8 +14,7 @@
  * The process_state_t enum contains the possible states for a process.
  *
  */
-typedef enum
-{
+typedef enum {
     PROCESS_NEW = 0,
     PROCESS_READY,
     PROCESS_RUNNING,
@@ -42,21 +41,18 @@ typedef enum
  *   next : An unused pointer to another PCB.  You may use this pointer to
  *        build a linked-list of PCBs.
  */
-typedef enum
-{
+typedef enum {
     OP_CPU = 0,
     OP_IO,
     OP_TERMINATE
 } op_type;
 
-typedef struct
-{
+typedef struct {
     op_type type;
     unsigned int time;
 } op_t;
 
-typedef struct _pcb_t
-{
+typedef struct _pcb_t {
     const unsigned int pid;
     const char *name;
     unsigned int time_remaining;

@@ -29,6 +29,13 @@ extern void wake_up(pcb_t *process);
 /**
  * current is an array of pointers to the currently running processes, 
  * each pointer corresponding to each CPU in the simulation.
+ * ]
+ * NOTE: This is NOT a list of lists. This variable is simply an array of pointers--and those pointers
+ * point to the currently executing process of that CPU (whose ID is the index we just accessed)
+ *
+ * e.g.:
+ * current[0] = pointer to the process running on the CPU whose ID is 0
+ * current[4] = pointer to the process running on the CPU whose ID is 4
  */
 static pcb_t **current;
 /* rq is a pointer to a struct you should use for your ready queue implementation.*/
@@ -58,7 +65,62 @@ static unsigned int cpu_count;
  * @param process process that we need to put in the ready queue
  */
 void enqueue(queue_t *queue, pcb_t *process) {
-    /* FIX ME */
+    if (is_empty(queue)) { //if the queue is empty, it doesn't matter which method of enqueueing we use
+        queue->head = process;
+        queue->tail = process;
+
+        //If the queue was empty, we might be waiting for it to be refilled.
+        //Signal that the queue has at least one element.
+        pthread_cond_signal(&queue_not_empty);
+        return;
+        //goto SIGNAL; //we dont even need goto. you only need to signal here since this is the only case
+        //where the queue would be empty and add something to itself. replace with cond_signal and return.
+    }
+
+    pcb_t *traverse_node = queue->head;
+    if (scheduler_algorithm == PR) { //Preemptive Priority ---- LOWER NUMBER IS HIGHER PRIORITY
+        //initially check if the new process' priority is higher than the head of the ready queue.
+        //We need to do this since in the while loop below we have to check the "next" nodes instead of the current
+        //nodes because if we check the current nodes we can't insert the new process into the queue correctly.
+        if (queue->head->priority > process->priority) {
+            process->next = queue->head; //first set new process' next node to the head
+            queue->head = process;       //then set the head to the new process (order of the last two lines matters)
+            return;
+        }
+
+        //if not, then traverse the queue to see where the lowest priority is and insert ourselves there.
+        while (traverse_node->next != NULL) {
+            if (traverse_node->next->priority > process->priority) { //curr->next less important than new process
+                process->next = traverse_node->next; //first, set new process next to next node
+                traverse_node->next = process;       //then set current traversed node to new process(order matters)
+                return;
+            } //else we keep going
+            traverse_node = traverse_node->next;
+        }
+
+
+        //The underlying assumption is at this point is that    traverse_node->next == NULL     (hence our while
+        //loop stopped) BUT that we have NOT checked the priority of the tail yet (traverse_node is currently the
+        //tail of the queue)
+//        if (queue->tail->priority > process->priority) { //the tail has a lower priority. add a new tail
+//
+//        } else { //the tail has higher priority; all nodes in our queue have a higher priority than the new process.
+//            //Add at
+//        }
+        assert(traverse_node->next == NULL); //For testing purposes
+//        queue->tail->next = process;     //first set the tail of the queue to the new process
+//        queue->tail = queue->tail->next; //then set the tail to the new process (order of last two lines matters)
+
+    } //else { //RR and FCFS enqueue are the same so let RR flow into FCFS
+//        queue->tail->next = process;     //first set the tail of the queue to the new process
+//        queue->tail = queue->tail->next; //then set the tail to the new process (order of last two lines matters)
+//    }
+
+    //ADD AT THE TAIL
+    queue->tail->next = process;     //first set the tail of the queue to the new process
+    queue->tail = queue->tail->next; //then set the tail to the new process (order of last two lines matters)
+
+//    SIGNAL:
 }
 
 /**
@@ -67,8 +129,13 @@ void enqueue(queue_t *queue, pcb_t *process) {
  * @param queue pointer to the ready queue
  */
 pcb_t *dequeue(queue_t *queue) {
-    /* FIX ME */
-    return NULL;
+    if (is_empty(queue)) {
+        return NULL;
+    }
+
+    pcb_t *node_to_remove = queue->head;
+    queue->head = queue->head->next;
+    return node_to_remove;
 }
 
 /** ------------------------Problem 0-----------------------------------
@@ -78,12 +145,10 @@ pcb_t *dequeue(queue_t *queue) {
  * has any processes in it.
  * 
  * @param queue pointer to the ready queue
- * 
  * @return a boolean value that indicates whether the queue is empty or not
  */
 bool is_empty(queue_t *queue) {
-    /* FIX ME */
-    return false;
+    return queue->head == NULL;
 }
 
 /** ------------------------Problem 1B & 3-----------------------------------
@@ -92,11 +157,30 @@ bool is_empty(queue_t *queue) {
  * schedule() is your CPU scheduler.
  * 
  * Remember to specify the timeslice if the scheduling algorithm is Round-Robin
+ * NOTE TO SELF: the timeslice is the UPPER BOUND (maximum time) for a process to run
+ *               before switching. If a process ends before its timeslice ends, then the
+ *               next scheduled process gets a new FULL timeslice, not the remainder of the
+ *               timeslice of the process that ended before it.
  * 
  * @param cpu_id the target cpu we decide to put our process in
  */
 static void schedule(unsigned int cpu_id) {
-    /* FIX ME */
+
+
+
+    //call context_switch to simulate putting a new process on a CPU
+    pthread_mutex_lock(&queue_mutex);
+    pcb_t *next_process = dequeue(rq);
+
+    //Check if the ready queue is empty (and wait until it is not to continue)
+//    while (NULL == next_process) { //dequeue() will return NULL if the queue is empty; We check if the queue is empty
+//        pthread_cond_wait(&queue_not_empty, &queue_mutex);
+//        next_process = dequeue(rq); //re-update the next_process pointer with the head of rq
+//    }
+
+    //Put a new process on this CPU
+    context_switch(cpu_id, next_process, -1); //-1 preemption time means the timeslice is infinite
+    pthread_mutex_unlock(&queue_mutex);
 }
 
 /**  ------------------------Problem 1A-----------------------------------
@@ -109,7 +193,17 @@ static void schedule(unsigned int cpu_id) {
  */
 extern void idle(unsigned int cpu_id) {
     /* FIX ME */
-    schedule(0);
+//    schedule(0);
+
+
+    pthread_mutex_lock(&queue_mutex);
+    pcb_t *head = rq->head;
+    while (NULL == head) { //dequeue() will return NULL if the queue is empty; We check if the queue is empty
+        pthread_cond_wait(&queue_not_empty, &queue_mutex);
+        head = dequeue(rq); //re-update the next_process pointer with the head of rq
+    }
+    pthread_mutex_unlock(&queue_mutex);
+    schedule(cpu_id);
 
     /*
      * REMOVE THE LINE BELOW AFTER IMPLEMENTING IDLE()
@@ -120,7 +214,7 @@ extern void idle(unsigned int cpu_id) {
      * you implement a proper idle() function using a condition variable,
      * remove the call to mt_safe_usleep() below.
      */
-    mt_safe_usleep(1000000);
+//    mt_safe_usleep(1000000);
 }
 
 /** ------------------------Problem 2 & 3-----------------------------------
@@ -135,7 +229,17 @@ extern void idle(unsigned int cpu_id) {
  * @param cpu_id the cpu in which we want to preempt process
  */
 extern void preempt(unsigned int cpu_id) {
-    /* FIX ME */
+    pthread_mutex_lock(&current_mutex);
+    current[cpu_id]->state = PROCESS_WAITING;
+
+
+    pthread_mutex_lock(&queue_mutex);
+    enqueue(rq, current[cpu_id]);
+    pthread_mutex_unlock(&queue_mutex);
+
+    pthread_mutex_unlock(&current_mutex);
+
+    schedule(cpu_id);
 }
 
 /**  ------------------------Problem 1-----------------------------------
@@ -147,7 +251,17 @@ extern void preempt(unsigned int cpu_id) {
  * @param cpu_id the cpu that is yielded by the process
  */
 extern void yield(unsigned int cpu_id) {
-    /* FIX ME */
+    //lock the current array
+    pthread_mutex_lock(&current_mutex);
+
+    //The process now must go into the I/O ready queue to be serviced; set its current state to WAITING
+    current[cpu_id]->state = PROCESS_WAITING;
+
+    //Unlock the current array
+    pthread_mutex_unlock(&current_mutex);
+
+    //This CPU no longer has anything running on it; let's now schedule a new process on it.
+    schedule(cpu_id);
 }
 
 /**  ------------------------Problem 1-----------------------------------
@@ -158,7 +272,16 @@ extern void yield(unsigned int cpu_id) {
  * @param cpu_id the cpu we want to terminate
  */
 extern void terminate(unsigned int cpu_id) {
-    /* FIX ME */
+    //set the status of the newly terminated process to TERMINATED
+    pthread_mutex_lock(&current_mutex);
+    current[cpu_id]->state = PROCESS_TERMINATED;
+    pthread_mutex_unlock(&current_mutex);
+
+
+
+
+    //This CPU no longer has anything running on it; let's now schedule a new process on it.
+    schedule(cpu_id);
 }
 
 /**  ------------------------Problem 1A & 3---------------------------------
@@ -171,7 +294,11 @@ extern void terminate(unsigned int cpu_id) {
  * @param process the process that finishes I/O and is ready to run on CPU
  */
 extern void wake_up(pcb_t *process) {
-    /* FIX ME */
+    process->state = PROCESS_WAITING;
+
+    pthread_mutex_lock(&queue_mutex);
+    enqueue(rq, process);
+    pthread_mutex_unlock(&queue_mutex);
 }
 
 /**

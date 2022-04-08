@@ -12,15 +12,13 @@
 #include "stdbool.h"
 
 /* Ready queue struct definition */
-typedef struct
-{
+typedef struct {
     pcb_t *head;
     pcb_t *tail;
 } queue_t;
 
 /* Type of scheduling algorithm */
-typedef enum sched_algorithm_type
-{
+typedef enum sched_algorithm_type {
     FCFS = 0x00,
     PR = 0x01,
     RR = 0x02

@@ -209,7 +209,7 @@ static void simulator_supervisor_thread(void) {
  *      to inform the CPU thread of the event, then it signals the condition
  *      variable.
  *
- *   4) Once the CPU thread unblocks, it calls the students event handler,
+ *   4) Once the CPU thread unblocks, it calls the student's event handler,
  *      then goes back to step 1.
  *
  * There is one special case: idle.  Idle is simulated by the student's code,
@@ -307,8 +307,7 @@ static void print_gantt_line(void) {
      */
     IRWL_READER_LOCK(student_lock)
     for (n=0; n<PROCESS_COUNT; n++) {
-        switch(processes[n].state)
-        {
+        switch(processes[n].state) {
         case PROCESS_READY:
             current_ready++;
             ready_counter++;
@@ -335,7 +334,7 @@ static void print_gantt_line(void) {
         current_running, current_ready, current_waiting);
 
     /* Print running processes */
-    for (n=0; n<cpu_count; n++)     {
+    for (n=0; n<cpu_count; n++) {
         if (simulator_cpu_data[n].current != NULL)
             printf(" %-8s", simulator_cpu_data[n].current->name);
         else
