@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <getopt.h> //ERIC ADDED THIS (but they said we can use the getopt function so that's why I did?)
 
 #include "student.h"
 
@@ -55,6 +56,7 @@ static pthread_cond_t queue_not_empty;
 /* keeps track of the scheduling algorithm and cpu count */
 static sched_algorithm_t scheduler_algorithm;
 static unsigned int cpu_count;
+static int timeslice; //we want this to be signed because a timeslice of -1 means an infinite timeslice
 
 /** ------------------------Problem 0 & 2-----------------------------------
  * Checkout PDF Section 2 and 4 for this problem
@@ -73,8 +75,6 @@ void enqueue(queue_t *queue, pcb_t *process) {
         //Signal that the queue has at least one element.
         pthread_cond_signal(&queue_not_empty);
         return;
-        //goto SIGNAL; //we dont even need goto. you only need to signal here since this is the only case
-        //where the queue would be empty and add something to itself. replace with cond_signal and return.
     }
 
     pcb_t *traverse_node = queue->head;
@@ -98,29 +98,15 @@ void enqueue(queue_t *queue, pcb_t *process) {
             traverse_node = traverse_node->next;
         }
 
-
         //The underlying assumption is at this point is that    traverse_node->next == NULL     (hence our while
-        //loop stopped) BUT that we have NOT checked the priority of the tail yet (traverse_node is currently the
-        //tail of the queue)
-//        if (queue->tail->priority > process->priority) { //the tail has a lower priority. add a new tail
-//
-//        } else { //the tail has higher priority; all nodes in our queue have a higher priority than the new process.
-//            //Add at
-//        }
+        //loop stopped) we HAVE checked the priority on the tail and thus all nodes in our queue have a higher priority
+        //than the new process. We will exit the if-statement and add to the tail just like Round-Robin and FCFS do.
         assert(traverse_node->next == NULL); //For testing purposes
-//        queue->tail->next = process;     //first set the tail of the queue to the new process
-//        queue->tail = queue->tail->next; //then set the tail to the new process (order of last two lines matters)
-
-    } //else { //RR and FCFS enqueue are the same so let RR flow into FCFS
-//        queue->tail->next = process;     //first set the tail of the queue to the new process
-//        queue->tail = queue->tail->next; //then set the tail to the new process (order of last two lines matters)
-//    }
-
-    //ADD AT THE TAIL
+    }
+    //RR and FCFS enqueue are both at the back; PR enqueue may be the back if all of the nodes in the queue have a
+    //higher priority than the new process. So the following lines add to the tail of the queue (like normal)
     queue->tail->next = process;     //first set the tail of the queue to the new process
     queue->tail = queue->tail->next; //then set the tail to the new process (order of last two lines matters)
-
-//    SIGNAL:
 }
 
 /**
@@ -165,12 +151,10 @@ bool is_empty(queue_t *queue) {
  * @param cpu_id the target cpu we decide to put our process in
  */
 static void schedule(unsigned int cpu_id) {
-
-
-
     //call context_switch to simulate putting a new process on a CPU
     pthread_mutex_lock(&queue_mutex);
     pcb_t *next_process = dequeue(rq);
+    pthread_mutex_unlock(&queue_mutex);
 
     //Check if the ready queue is empty (and wait until it is not to continue)
 //    while (NULL == next_process) { //dequeue() will return NULL if the queue is empty; We check if the queue is empty
@@ -179,8 +163,19 @@ static void schedule(unsigned int cpu_id) {
 //    }
 
     //Put a new process on this CPU
-    context_switch(cpu_id, next_process, -1); //-1 preemption time means the timeslice is infinite
-    pthread_mutex_unlock(&queue_mutex);
+    context_switch(cpu_id, next_process, timeslice);
+
+    //Update the current array. First lock "current"
+    pthread_mutex_lock(&current_mutex);
+
+    //NOTE: It is the job of functions that call schedule() to update the state of the process running on current
+    //before schedule is called. For example, terminate() will set the process' state to PROCESS_TERMINATED and
+    //other functions like preempt and yield will set it to PROCESS_WAITING
+    current[cpu_id] = next_process; //set the "current" array's index of the cpi_id to the new process
+    current[cpu_id]->state = PROCESS_RUNNING; //Update the running process' state
+
+    pthread_mutex_unlock(&current_mutex);
+//    pthread_mutex_unlock(&queue_mutex);
 }
 
 /**  ------------------------Problem 1A-----------------------------------
@@ -231,13 +226,11 @@ extern void idle(unsigned int cpu_id) {
 extern void preempt(unsigned int cpu_id) {
     pthread_mutex_lock(&current_mutex);
     current[cpu_id]->state = PROCESS_WAITING;
-
+    pthread_mutex_unlock(&current_mutex);
 
     pthread_mutex_lock(&queue_mutex);
     enqueue(rq, current[cpu_id]);
     pthread_mutex_unlock(&queue_mutex);
-
-    pthread_mutex_unlock(&current_mutex);
 
     schedule(cpu_id);
 }
@@ -277,9 +270,6 @@ extern void terminate(unsigned int cpu_id) {
     current[cpu_id]->state = PROCESS_TERMINATED;
     pthread_mutex_unlock(&current_mutex);
 
-
-
-
     //This CPU no longer has anything running on it; let's now schedule a new process on it.
     schedule(cpu_id);
 }
@@ -315,15 +305,50 @@ int main(int argc, char *argv[]) {
     /*
      * FIX ME
      */
-    scheduler_algorithm = FCFS;
+    //The below commented out code was what was given. Not sure whether i need a part of this or not tho
+//    scheduler_algorithm = FCFS;
+//
+//    if (argc != 2) {
+//        fprintf(stderr, "CS 2200 Project 4 -- Multithreaded OS Simulator\n"
+//                        "Usage: ./os-sim <# CPUs> [ -r <time slice> | -p ]\n"
+//                        "    Default : FCFS Scheduler\n"
+//                        "         -r : Round-Robin Scheduler\n1\n"
+//                        "         -p : Priority Scheduler\n");
+//        return -1;
+//    }
+    scheduler_algorithm = FCFS; //initially set the algorithm to FCFS (if we don't want that it'll be updated below)
+    timeslice = -1; //initially set timeslice to -1 (-1 signifies infinite timeslice for PR and FCFS). else, updated
+    int option_char;
 
-    if (argc != 2) {
-        fprintf(stderr, "CS 2200 Project 4 -- Multithreaded OS Simulator\n"
+    //":r:p:" optstring denotes that we can take either the -r or -p flags (the -r flag requires an argument). The
+    //initial colon in the optstring is to allow getopt to return ':' when an argument was expected but not given
+    while ((option_char = getopt(argc, argv, ":pr:")) != -1) {
+        switch (option_char) {
+            case 'r': //Round-Robin scheduler (with timeslice specified)
+                scheduler_algorithm = RR;
+                timeslice = atoi(optarg); //use atoi() to convert char * to int
+                break;
+            case 'p': //Preemptive Priority scheduler
+                scheduler_algorithm = PR;
+                break;
+            case ':':
+                printf("ERROR: getopt() returned ':' meaning the %s option was expecting an argument and nothing was given\n",
+                       argv[optind - 2]);
+                fprintf(stderr, "CS 2200 Project 4 -- Multithreaded OS Simulator\n"
                         "Usage: ./os-sim <# CPUs> [ -r <time slice> | -p ]\n"
                         "    Default : FCFS Scheduler\n"
                         "         -r : Round-Robin Scheduler\n1\n"
                         "         -p : Priority Scheduler\n");
-        return -1;
+                return -1; //return since incorrect command was given
+            default: //option_char == '?'
+                fprintf(stderr, "CS 2200 Project 4 -- Multithreaded OS Simulator\n"
+                        "Usage: ./os-sim <# CPUs> [ -r <time slice> | -p ]\n"
+                        "    Default : FCFS Scheduler\n"
+                        "         -r : Round-Robin Scheduler\n1\n"
+                        "         -p : Priority Scheduler\n");
+                printf("ERROR: getopt() returned '?' ...  \"%s\" is not a valid option \n", argv[optind - 1]);
+                return -1; //return since incorrect command was given
+        }
     }
 
 
