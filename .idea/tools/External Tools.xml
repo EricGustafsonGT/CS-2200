@@ -6,4 +6,11 @@
       <option name="WORKING_DIRECTORY" value="$USER_HOME$/Documents/COMP SCI C-C++/CS 2200/Projects/Project 3 - Virtual Memory" />
     </exec>
   </tool>
+  <tool name="Project 4 Create Tool" showInMainMenu="false" showInEditor="false" showInProject="false" showInSearchPopup="false" disabled="false" useConsole="true" showConsoleOnStdOut="false" showConsoleOnStdErr="false" synchronizeAfterRun="true">
+    <exec>
+      <option name="COMMAND" value="$USER_HOME$/Documents/COMP SCI C-C++/CS 2200/Projects/Project 4 - Processor Scheduling/os-sim" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$USER_HOME$/Documents/COMP SCI C-C++/CS 2200/Projects/Project 4 - Processor Scheduling" />
+    </exec>
+  </tool>
 </toolSet>

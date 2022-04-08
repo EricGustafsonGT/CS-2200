@@ -289,6 +289,17 @@ extern void wake_up(pcb_t *process) {
     pthread_mutex_lock(&queue_mutex);
     enqueue(rq, process);
     pthread_mutex_unlock(&queue_mutex);
+
+    if (scheduler_algorithm == PR) { //If the scheduling algo is Preemptive Priority
+        pthread_mutex_lock(&current_mutex);
+        for (unsigned int i = 0; i < cpu_count; i++) {
+            if (current[i]->priority > process->priority) {
+                preempt(i);
+                break;
+            }
+        }
+        pthread_mutex_unlock(&current_mutex); //we should still execute this after breaking
+    } //else for RR and FCFS we don't need to do any pre-emptiveness swapping
 }
 
 /**

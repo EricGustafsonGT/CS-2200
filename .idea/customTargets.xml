@@ -8,5 +8,12 @@
         </build>
       </configuration>
     </target>
+    <target id="c39920f6-c3b8-41cd-b874-cdbc9a1aaa74" name="Project 4 run" defaultType="TOOL">
+      <configuration id="75e397f3-82f7-45e3-a69b-1752668d75c5" name="Project 4 run" toolchainName="Default">
+        <build type="TOOL">
+          <tool actionId="Tool_External Tools_Project 4 Create Tool" />
+        </build>
+      </configuration>
+    </target>
   </component>
 </project>
