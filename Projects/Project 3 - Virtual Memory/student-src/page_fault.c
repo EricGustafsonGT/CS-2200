@@ -54,7 +54,7 @@ void page_fault(vaddr_t addr) {
 
    //update the processes' page table
    page_table_entry->valid = 0x1; //also not sure about this line
-//   page_table_entry->dirty = 0x0; //not sure about this line
+   page_table_entry->dirty = 0x0; //not sure about this line
    page_table_entry->pfn = new_frame; //not sure about this one
 
    //update the frame table

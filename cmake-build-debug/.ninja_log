@@ -1,18 +1,15 @@
 # ninja log v5
-41	68	1646689437074987626	CS_2200	9fcb1b73d4fbe8a
-0	41	1646689437046973625	CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist_tests.c.o	9b4b2c50382bd11d
-0	41	1646088744225030351	CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist.c.o	cd832fbc8bf92fc3
-0	152	1646689311692322666	CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/main.c.o	fbf297c06f06ac5e
-0	42	1645852837715544218	CMakeFiles/CS_2200.dir/main.c.o	1b55f0696e404fdf
-0	39	1648421515161625161	CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/main.c.o	fbf297c06f06ac5e
-2	58	1648421515181628519	CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist.c.o	cd832fbc8bf92fc3
-3	59	1648421515181628519	CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist_tests.c.o	9b4b2c50382bd11d
-4	61	1648421515185629191	CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swap.c.o	93ac255ffa7ca817
 1	63	1648421520062447565	CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/util.c.o	3d134411d764b932
-0	45	1648421621640262112	CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/pagesim.c.o	533b7d2c0cc39e8f
-2	54	1648421621648259447	CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/mmu.c.o	8c2a56ebd934b6fb
+41	68	1646689437074987626	CS_2200	9fcb1b73d4fbe8a
+3	59	1648421515181628519	CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist_tests.c.o	9b4b2c50382bd11d
+2	58	1648421515181628519	CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist.c.o	cd832fbc8bf92fc3
 2	54	1648421621652258113	CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/page_fault.c.o	967017a7f05d44a4
-1	54	1648421621656256780	CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swapops.c.o	538321ab9543832e
 2	59	1648421621660255446	CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/proc.c.o	70c6ae290fee94bf
+0	45	1648421621640262112	CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/pagesim.c.o	533b7d2c0cc39e8f
 1	75	1648421621672251447	CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/page_replacement.c.o	f10a402a68b11526
 1	22	1648421634715901329	CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/stats.c.o	25da4f47af290177
+2	54	1648421621648259447	CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/mmu.c.o	8c2a56ebd934b6fb
+0	39	1648421515161625161	CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/main.c.o	fbf297c06f06ac5e
+1	54	1648421621656256780	CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swapops.c.o	538321ab9543832e
+4	61	1648421515185629191	CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swap.c.o	93ac255ffa7ca817
+0	42	1645852837715544218	CMakeFiles/CS_2200.dir/main.c.o	1b55f0696e404fdf

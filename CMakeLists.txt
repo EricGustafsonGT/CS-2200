@@ -29,4 +29,10 @@ add_executable(CS_2200 main.c
         "Projects/Project 3 - Virtual Memory/student-src/page_replacement.c"
         "Projects/Project 3 - Virtual Memory/student-src/proc.c"
         "Projects/Project 3 - Virtual Memory/student-src/page_fault.c"
-        "Projects/Project 3 - Virtual Memory/student-src/stats.c")
+        "Projects/Project 3 - Virtual Memory/student-src/stats.c"
+        "Projects/Project 4 - Processor Scheduling/src/os-sim.c"
+        "Projects/Project 4 - Processor Scheduling/src/os-sim.h"
+        "Projects/Project 4 - Processor Scheduling/src/process.c"
+        "Projects/Project 4 - Processor Scheduling/src/process.h"
+        "Projects/Project 4 - Processor Scheduling/src/student.c"
+        "Projects/Project 4 - Processor Scheduling/src/student.h")
