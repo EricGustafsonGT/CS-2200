@@ -4,22 +4,101 @@ Project 4
 Name: Eric Gustafson
 GT Username: egustafson9
 
-Problem 1C (FCFS Scheduler)
-----------
+                              Problem 1C (FCFS Scheduler) (Section 3.4 of the pdf)
+Run your OS simulation with 1, 2, and 4 CPUs. Compare the total execution time of each. Is there a linear
+relationship between the number of CPUs and total execution time? Why or why not? Keep in mind that
+the execution time refers to the simulated execution time.
+-------------------------------------------------ANSWER BELOW-------------------------------------------------
+CASE: 1 Core
+Total Context Switches: 93
+Total execution time: 68.3 s
+Total time spent in READY state: 376.5 s
 
-/* Fix me */
+CASE: 2 Cores
+Total Context Switches: 118
+Total execution time: 39.8 s
+Total time spent in READY state: 64.3 s
 
-Problem 2B (Round-Robin)
-----------
+CASE: 4 Cores
+Total Context Switches: 172
+Total execution time: 37.3 s
+Total time spent in READY state: 4.6 s
 
-/* Fix me */
 
-Problem 3B (Preemptive Priority)
-----------
+The general trend is that the more cores there are the faster the execution time. This is likely because with more
+cores there is a higher potential to do more work concurrently. There was not a linear relationship between number
+of cores and execution time, however. As shown by the data, there is about a 30-second reduction from increasing the
+number of cores from 1 to 2 but there was only a 2.5-second reduction from 2 to 4. This is likely because although
+there is more potential to do work concurrently, there are sections of code that cannot be done concurrently. Threads
+that are blocked from entering critical sections because the mutex they need is in use have to sit and wait for the
+mutex to become available. Therefore, critical sections do not allow us to utilize our full system's potential. Another
+reason is that IO-burst time is not reduced by adding more cores (processors), so IO-burst time also is unoptimizable in
+terms of adding more cores.
 
-/* Fix me */
 
-Problem 4 (The Priority Inversion Problem)
----------
 
-/* Fix me */
+
+
+                                    Problem 2B (Round-Robin) (Section 4.2 of pdf)
+Run your Round-Robin scheduler with timeslices of 800ms, 600ms, 400ms, and 200ms. Use only one CPU
+for your tests. Compare the statistics at the end of the simulation. Is there a relationship between the total
+waiting time and timeslice length? If so, what is it? In contrast, in a real OS, the shortest timeslice possible
+is usually not the best choice. Why not?
+-------------------------------------------------ANSWER BELOW-------------------------------------------------
+CASE: 200ms (1 core)
+Total Context Switches: 363
+Total execution time: 67.9 s
+Total time spent in READY state: 284.4 s
+
+CASE: 400ms (1 core)
+Total Context Switches: 201
+Total execution time: 67.9 s
+Total time spent in READY state: 291.9 s
+
+CASE: 600ms (1 core)
+Total Context Switches: 154
+Total execution time: 68.1 s
+Total time spent in READY state: 304.5 s
+
+CASE: 800ms (1 core)
+Total Context Switches: 131
+Total execution time: 67.9 s
+Total time spent in READY state: 317.1 s
+
+As the timeslice is increased, the number of context switches decreased and the total wait time increased. There seemed
+to be no change in total execution time. The shortest timeslice in a real OS is not preferred because you'd be so busy
+switching between processes that no processes would ever get done since there are so many processes in a real OS.
+
+
+
+                        Problem 3B (Preemptive Priority) (section 5.2 of pdf)
+Priority schedulers can sometimes lead to starvation among processes with lower priority. What is a way
+that operating systems can mitigate starvation in a priority scheduler?
+-------------------------------------------------ANSWER BELOW-------------------------------------------------
+Over time, we could increase the priority of low priority processes just based on how long they've been waiting
+to get CPU time so that eventually they can gain more priority and be scheduled on the CPU.
+
+
+
+
+
+
+
+                    Problem 4 (The Priority Inversion Problem) (section 6 of pdf)
+Consider a non-preemptive priority scheduler. Suppose you have a high priority process (P1) that wants to
+display a window on the monitor. But, the window manager is a process with low priority and will be placed
+on the end of the ready queue. While it is waiting to be scheduled, new medium priority processes are likely
+to come in and starve the window manager process. The starvation of the window manager will also mean
+the starvation of P1 (the process with high priority), since P1 is waiting for the window manager to finish
+running.
+
+If we want to keep our non-preemptive priority scheduler, what edits can we make to our scheduler to ensure
+that the P1 can finish its execution before any of the medium priority processes finish their execution?
+Explain in detail the changes you would make.
+-------------------------------------------------ANSWER BELOW-------------------------------------------------
+We could allow the window manager to inherit the priority of the display process when the display process spawns it.
+For example, when the operating system is requested to service the high priority display process and subsequently gets
+to the point where it needs to spawn a new process for the window manager (who inherently has a low priority), the
+scheduler can allow the window manager to inherit the priority of the high-process display because it is the driving
+process, thus allowing the window manager to run before medium priority processes.
+

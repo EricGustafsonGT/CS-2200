@@ -1,4 +1,7 @@
 /*
+ * Name: Eric Gustafson
+ * GT Username: egustafson9
+ *
  * student.c
  * Multithreaded OS Simulation for CS 2200
  *
@@ -63,21 +66,25 @@ static int timeslice; //we want this to be signed because a timeslice of -1 mean
  * 
  * enqueue() is a helper function to add a process to the ready queue.
  *
+ * ERIC NOTE: THIS THREAD (I believe) IS THREAD-SAFE (no need to lock queue_mutex before calling this function)
+ *
  * @param queue pointer to the ready queue
  * @param process process that we need to put in the ready queue
  */
 void enqueue(queue_t *queue, pcb_t *process) {
+    pthread_mutex_lock(&queue_mutex); //initially lock the queue
     if (is_empty(queue)) { //if the queue is empty, it doesn't matter which method of enqueueing we use
         queue->head = process;
         queue->tail = process;
 
         //If the queue was empty, we might be waiting for it to be refilled.
         //Signal that the queue has at least one element.
-        pthread_cond_signal(&queue_not_empty);
+//        pthread_cond_signal(&queue_not_empty);
+        pthread_mutex_unlock(&queue_mutex); //before we return unlock the queue
         return;
     }
 
-    pcb_t *traverse_node = queue->head;
+
     if (scheduler_algorithm == PR) { //Preemptive Priority ---- LOWER NUMBER IS HIGHER PRIORITY
         //initially check if the new process' priority is higher than the head of the ready queue.
         //We need to do this since in the while loop below we have to check the "next" nodes instead of the current
@@ -85,14 +92,16 @@ void enqueue(queue_t *queue, pcb_t *process) {
         if (queue->head->priority > process->priority) {
             process->next = queue->head; //first set new process' next node to the head
             queue->head = process;       //then set the head to the new process (order of the last two lines matters)
+            pthread_mutex_unlock(&queue_mutex); //before we return unlock the queue
             return;
         }
-
+        pcb_t *traverse_node = queue->head;
         //if not, then traverse the queue to see where the lowest priority is and insert ourselves there.
         while (traverse_node->next != NULL) {
             if (traverse_node->next->priority > process->priority) { //curr->next less important than new process
                 process->next = traverse_node->next; //first, set new process next to next node
                 traverse_node->next = process;       //then set current traversed node to new process(order matters)
+                pthread_mutex_unlock(&queue_mutex); //before we return unlock the queue
                 return;
             } //else we keep going
             traverse_node = traverse_node->next;
@@ -101,12 +110,12 @@ void enqueue(queue_t *queue, pcb_t *process) {
         //The underlying assumption is at this point is that    traverse_node->next == NULL     (hence our while
         //loop stopped) we HAVE checked the priority on the tail and thus all nodes in our queue have a higher priority
         //than the new process. We will exit the if-statement and add to the tail just like Round-Robin and FCFS do.
-        assert(traverse_node->next == NULL); //For testing purposes
     }
     //RR and FCFS enqueue are both at the back; PR enqueue may be the back if all of the nodes in the queue have a
     //higher priority than the new process. So the following lines add to the tail of the queue (like normal)
     queue->tail->next = process;     //first set the tail of the queue to the new process
     queue->tail = queue->tail->next; //then set the tail to the new process (order of last two lines matters)
+    pthread_mutex_unlock(&queue_mutex); //before we return unlock the queue
 }
 
 /**
@@ -115,12 +124,20 @@ void enqueue(queue_t *queue, pcb_t *process) {
  * @param queue pointer to the ready queue
  */
 pcb_t *dequeue(queue_t *queue) {
+    pthread_mutex_lock(&queue_mutex); //initially lock the queue
     if (is_empty(queue)) {
+        pthread_mutex_unlock(&queue_mutex);
         return NULL;
     }
 
     pcb_t *node_to_remove = queue->head;
-    queue->head = queue->head->next;
+    queue->head = queue->head->next; //if the queue is now empty head->next should be NULL
+    if (is_empty(queue)) { //if the queue is empty then we must set the tail to NULL
+        queue->tail = NULL;
+    }
+    pthread_mutex_unlock(&queue_mutex); //before we return unlock the queue
+    node_to_remove->next = NULL;
+    node_to_remove->state = PROCESS_RUNNING;
     return node_to_remove;
 }
 
@@ -151,19 +168,8 @@ bool is_empty(queue_t *queue) {
  * @param cpu_id the target cpu we decide to put our process in
  */
 static void schedule(unsigned int cpu_id) {
-    //call context_switch to simulate putting a new process on a CPU
-    pthread_mutex_lock(&queue_mutex);
+    //no need to lock queue_mutex before calling this since dequeue is thread-safe
     pcb_t *next_process = dequeue(rq);
-    pthread_mutex_unlock(&queue_mutex);
-
-    //Check if the ready queue is empty (and wait until it is not to continue)
-//    while (NULL == next_process) { //dequeue() will return NULL if the queue is empty; We check if the queue is empty
-//        pthread_cond_wait(&queue_not_empty, &queue_mutex);
-//        next_process = dequeue(rq); //re-update the next_process pointer with the head of rq
-//    }
-
-    //Put a new process on this CPU
-    context_switch(cpu_id, next_process, timeslice);
 
     //Update the current array. First lock "current"
     pthread_mutex_lock(&current_mutex);
@@ -172,10 +178,11 @@ static void schedule(unsigned int cpu_id) {
     //before schedule is called. For example, terminate() will set the process' state to PROCESS_TERMINATED and
     //other functions like preempt and yield will set it to PROCESS_WAITING
     current[cpu_id] = next_process; //set the "current" array's index of the cpi_id to the new process
-    current[cpu_id]->state = PROCESS_RUNNING; //Update the running process' state
 
     pthread_mutex_unlock(&current_mutex);
-//    pthread_mutex_unlock(&queue_mutex);
+
+    //call context_switch to simulate putting a new process on a CPU
+    context_switch(cpu_id, next_process, timeslice);
 }
 
 /**  ------------------------Problem 1A-----------------------------------
@@ -187,15 +194,10 @@ static void schedule(unsigned int cpu_id) {
  * @param cpu_id the cpu that is waiting for process to come in
  */
 extern void idle(unsigned int cpu_id) {
-    /* FIX ME */
-//    schedule(0);
-
 
     pthread_mutex_lock(&queue_mutex);
-    pcb_t *head = rq->head;
-    while (NULL == head) { //dequeue() will return NULL if the queue is empty; We check if the queue is empty
+    while (rq->head == NULL) { //dequeue() will return NULL if the queue is empty; We check if the queue is empty
         pthread_cond_wait(&queue_not_empty, &queue_mutex);
-        head = dequeue(rq); //re-update the next_process pointer with the head of rq
     }
     pthread_mutex_unlock(&queue_mutex);
     schedule(cpu_id);
@@ -225,12 +227,16 @@ extern void idle(unsigned int cpu_id) {
  */
 extern void preempt(unsigned int cpu_id) {
     pthread_mutex_lock(&current_mutex);
-    current[cpu_id]->state = PROCESS_WAITING;
+    current[cpu_id]->state = PROCESS_READY;
+    //no need to lock queue_mutex before calling this since enqueue is thread-safe
+    enqueue(rq, current[cpu_id]);
+    pthread_cond_signal(&queue_not_empty);  //TODO not sure why putting cond_signal outside of enqueue decreases
+                                                 //the wait time in the autograder but its what i had to do
+
+
     pthread_mutex_unlock(&current_mutex);
 
-    pthread_mutex_lock(&queue_mutex);
-    enqueue(rq, current[cpu_id]);
-    pthread_mutex_unlock(&queue_mutex);
+
 
     schedule(cpu_id);
 }
@@ -284,21 +290,32 @@ extern void terminate(unsigned int cpu_id) {
  * @param process the process that finishes I/O and is ready to run on CPU
  */
 extern void wake_up(pcb_t *process) {
-    process->state = PROCESS_WAITING;
 
-    pthread_mutex_lock(&queue_mutex);
+    //no need to lock queue_mutex before calling this since enqueue is thread-safe
+    process->state = PROCESS_READY;
     enqueue(rq, process);
-    pthread_mutex_unlock(&queue_mutex);
+    pthread_cond_signal(&queue_not_empty); //TODO not sure why putting cond_signal outside of enqueue decreases
+                                                //the wait time in the autograder but its what i had to do
 
+    unsigned int lowestPrioritySeen = process->priority;
+    unsigned int cpuWithLowerPriority = -1;
     if (scheduler_algorithm == PR) { //If the scheduling algo is Preemptive Priority
         pthread_mutex_lock(&current_mutex);
         for (unsigned int i = 0; i < cpu_count; i++) {
-            if (current[i]->priority > process->priority) {
-                preempt(i);
-                break;
+            //First we check if the ith CPU is idle
+            if (current[i] == NULL) {
+                //there is a CPU that is idle; no need to preempt
+                pthread_mutex_unlock(&current_mutex);
+                return;
+            } else if (current[i]->priority > lowestPrioritySeen) {
+                cpuWithLowerPriority = i; //ith cpu
+                lowestPrioritySeen = current[i]->priority;
             }
         }
         pthread_mutex_unlock(&current_mutex); //we should still execute this after breaking
+        if (cpuWithLowerPriority != -1) { //there is a CPU with a lower priority process than the new one; preempt
+            force_preempt(cpuWithLowerPriority);
+        }
     } //else for RR and FCFS we don't need to do any pre-emptiveness swapping
 }
 
@@ -312,21 +329,9 @@ extern void wake_up(pcb_t *process) {
  * keep track of the scheduling algorithm you're using.
  */
 int main(int argc, char *argv[]) {
+    /* Parse the command line arguments */
+    cpu_count = strtoul(argv[1], NULL, 0);
 
-    /*
-     * FIX ME
-     */
-    //The below commented out code was what was given. Not sure whether i need a part of this or not tho
-//    scheduler_algorithm = FCFS;
-//
-//    if (argc != 2) {
-//        fprintf(stderr, "CS 2200 Project 4 -- Multithreaded OS Simulator\n"
-//                        "Usage: ./os-sim <# CPUs> [ -r <time slice> | -p ]\n"
-//                        "    Default : FCFS Scheduler\n"
-//                        "         -r : Round-Robin Scheduler\n1\n"
-//                        "         -p : Priority Scheduler\n");
-//        return -1;
-//    }
     scheduler_algorithm = FCFS; //initially set the algorithm to FCFS (if we don't want that it'll be updated below)
     timeslice = -1; //initially set timeslice to -1 (-1 signifies infinite timeslice for PR and FCFS). else, updated
     int option_char;
@@ -346,25 +351,22 @@ int main(int argc, char *argv[]) {
                 printf("ERROR: getopt() returned ':' meaning the %s option was expecting an argument and nothing was given\n",
                        argv[optind - 2]);
                 fprintf(stderr, "CS 2200 Project 4 -- Multithreaded OS Simulator\n"
-                        "Usage: ./os-sim <# CPUs> [ -r <time slice> | -p ]\n"
-                        "    Default : FCFS Scheduler\n"
-                        "         -r : Round-Robin Scheduler\n1\n"
-                        "         -p : Priority Scheduler\n");
+                                "Usage: ./os-sim <# CPUs> [ -r <time slice> | -p ]\n"
+                                "    Default : FCFS Scheduler\n"
+                                "         -r : Round-Robin Scheduler\n1\n"
+                                "         -p : Priority Scheduler\n");
                 return -1; //return since incorrect command was given
             default: //option_char == '?'
                 fprintf(stderr, "CS 2200 Project 4 -- Multithreaded OS Simulator\n"
-                        "Usage: ./os-sim <# CPUs> [ -r <time slice> | -p ]\n"
-                        "    Default : FCFS Scheduler\n"
-                        "         -r : Round-Robin Scheduler\n1\n"
-                        "         -p : Priority Scheduler\n");
+                                "Usage: ./os-sim <# CPUs> [ -r <time slice> | -p ]\n"
+                                "    Default : FCFS Scheduler\n"
+                                "         -r : Round-Robin Scheduler\n1\n"
+                                "         -p : Priority Scheduler\n");
                 printf("ERROR: getopt() returned '?' ...  \"%s\" is not a valid option \n", argv[optind - 1]);
                 return -1; //return since incorrect command was given
         }
     }
 
-
-    /* Parse the command line arguments */
-    cpu_count = strtoul(argv[1], NULL, 0);
 
     /* Allocate the current[] array and its mutex */
     current = malloc(sizeof(pcb_t *) * cpu_count);
