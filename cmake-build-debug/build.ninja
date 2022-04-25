@@ -168,6 +168,30 @@ build CMakeFiles/CS_2200.dir/Projects/Project_4_-_Processor_Scheduling/src/stude
   OBJECT_DIR = CMakeFiles/CS_2200.dir
   OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_4_-_Processor_Scheduling/src
 
+build CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src/client.c.o: C_COMPILER__CS_2200_Debug /home/eric/Documents/COMP$ SCI$ C-C++/CS$ 2200/Projects/Project$ 5$ -$ Networking/src/client.c || cmake_object_order_depends_target_CS_2200
+  DEP_FILE = CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src/client.c.o.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles/CS_2200.dir
+  OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src
+
+build CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src/rtp.c.o: C_COMPILER__CS_2200_Debug /home/eric/Documents/COMP$ SCI$ C-C++/CS$ 2200/Projects/Project$ 5$ -$ Networking/src/rtp.c || cmake_object_order_depends_target_CS_2200
+  DEP_FILE = CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src/rtp.c.o.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles/CS_2200.dir
+  OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src
+
+build CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src/network.c.o: C_COMPILER__CS_2200_Debug /home/eric/Documents/COMP$ SCI$ C-C++/CS$ 2200/Projects/Project$ 5$ -$ Networking/src/network.c || cmake_object_order_depends_target_CS_2200
+  DEP_FILE = CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src/network.c.o.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles/CS_2200.dir
+  OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src
+
+build CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src/queue.c.o: C_COMPILER__CS_2200_Debug /home/eric/Documents/COMP$ SCI$ C-C++/CS$ 2200/Projects/Project$ 5$ -$ Networking/src/queue.c || cmake_object_order_depends_target_CS_2200
+  DEP_FILE = CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src/queue.c.o.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles/CS_2200.dir
+  OBJECT_FILE_DIR = CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target CS_2200
@@ -176,7 +200,7 @@ build CMakeFiles/CS_2200.dir/Projects/Project_4_-_Processor_Scheduling/src/stude
 #############################################
 # Link the executable CS_2200
 
-build CS_2200: C_EXECUTABLE_LINKER__CS_2200_Debug CMakeFiles/CS_2200.dir/main.c.o CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/main.c.o CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist.c.o CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist_tests.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/pagesim.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swap.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swapops.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/util.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/mmu.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/page_replacement.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/proc.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/page_fault.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/stats.c.o CMakeFiles/CS_2200.dir/Projects/Project_4_-_Processor_Scheduling/src/os-sim.c.o CMakeFiles/CS_2200.dir/Projects/Project_4_-_Processor_Scheduling/src/process.c.o CMakeFiles/CS_2200.dir/Projects/Project_4_-_Processor_Scheduling/src/student.c.o
+build CS_2200: C_EXECUTABLE_LINKER__CS_2200_Debug CMakeFiles/CS_2200.dir/main.c.o CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/main.c.o CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist.c.o CMakeFiles/CS_2200.dir/Homeworks/CS_2200_HW_4_-_C_Practice/C_Review_Homework/src/arraylist_tests.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/pagesim.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swap.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/swapops.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/simulator-src/util.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/mmu.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/page_replacement.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/proc.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/page_fault.c.o CMakeFiles/CS_2200.dir/Projects/Project_3_-_Virtual_Memory/student-src/stats.c.o CMakeFiles/CS_2200.dir/Projects/Project_4_-_Processor_Scheduling/src/os-sim.c.o CMakeFiles/CS_2200.dir/Projects/Project_4_-_Processor_Scheduling/src/process.c.o CMakeFiles/CS_2200.dir/Projects/Project_4_-_Processor_Scheduling/src/student.c.o CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src/client.c.o CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src/rtp.c.o CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src/network.c.o CMakeFiles/CS_2200.dir/Projects/Project_5_-_Networking/src/queue.c.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/CS_2200.dir
   POST_BUILD = :

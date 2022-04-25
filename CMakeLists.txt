@@ -35,4 +35,11 @@ add_executable(CS_2200 main.c
         "Projects/Project 4 - Processor Scheduling/src/process.c"
         "Projects/Project 4 - Processor Scheduling/src/process.h"
         "Projects/Project 4 - Processor Scheduling/src/student.c"
-        "Projects/Project 4 - Processor Scheduling/src/student.h")
+        "Projects/Project 4 - Processor Scheduling/src/student.h"
+        "Projects/Project 5 - Networking/src/client.c"
+        "Projects/Project 5 - Networking/src/rtp.c"
+        "Projects/Project 5 - Networking/src/rtp.h"
+        "Projects/Project 5 - Networking/src/network.c"
+        "Projects/Project 5 - Networking/src/network.h"
+        "Projects/Project 5 - Networking/src/queue.c"
+        "Projects/Project 5 - Networking/src/queue.h")
