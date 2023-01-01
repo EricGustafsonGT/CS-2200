@@ -13,6 +13,15 @@ typedef struct message {
     int length;
 } message_t;
 
+//ERIC CREATED THIS MACRO
+#define IS_ODD(x) ((1 & ((size_t) (x))) == 1) //bitwise AND of address and 1
+
+//ERIC CREATED THIS ENUm
+enum {
+    SENT = 10,
+    NOT_SENT
+};
+
 /* ================================================================ */
 /*                  H E L P E R    F U N C T I O N S                */
 /* ================================================================ */
@@ -26,16 +35,67 @@ typedef struct message {
  * 
  * @param buffer pointer to message buffer to be broken up packets
  * @param length length of the message buffer.
- * @param count number of packets in the returning array
+ * @param count pointer to the number of packets in the returning array
  * 
  * @returns array of packets
+ * TODO 1: implement the packetize function
  */
 packet_t *packetize(char *buffer, int length, int *count) {
-
     packet_t *packets;
 
-    /* ----  FIXME  ---- */
+    /* ----  START OF STUDENT CODE ---- */
+    
+    /* 0. SETUP*/
+    //Find out how many packets we need to split the buffer into
+    int numPacketsNeeded = length / MAX_PAYLOAD_LENGTH + 1;
+    //edge case if packet size evenly divides into max payload size (consider max size of 7...we only want 1 packet  
+    // if the length is 6, still only packet if the size is 7, but 2 if the size is 8).
+    if (length % MAX_PAYLOAD_LENGTH == 0) {
+        numPacketsNeeded -= 1;
+    }
 
+    // 1. Allocate an array of packets big enough to carry all the data.
+    //    The provided code in the send thread function will free this array once it is done.
+    packets = calloc((size_t) numPacketsNeeded, sizeof(packet_t));
+
+    /* 2. Populate all the fields of the packet including the payload. Remember, The last packet should be
+     *    a LAST_DATA packet. All other packets should be DATA packets. THIS IS IMPORTANT. The server
+     *    checks for this, and it will disconnect you if they are not filled in correctly. If you neglect
+     *    the LAST_DATA
+     */
+    char *block_of_buffer_to_packetize;
+    const int size_of_last_packet = length % MAX_PAYLOAD_LENGTH;
+    for (int i = 0; i < numPacketsNeeded; i++) {
+        block_of_buffer_to_packetize = buffer + (i * MAX_PAYLOAD_LENGTH);
+
+        if (i < numPacketsNeeded - 1) {
+            packets[i].type = DATA;
+            packets[i].payload_length = MAX_PAYLOAD_LENGTH;
+        } else {
+            packets[i].type = LAST_DATA; //no matter the edge case, this is the last packet
+            if (size_of_last_packet == 0) { //if the last payload size evenly divides into a packet
+                packets[i].payload_length = MAX_PAYLOAD_LENGTH;
+            } else { //there is internal fragmentation within the last packet (allocated space that is wasted)
+                packets[i].payload_length = size_of_last_packet;
+            }
+        }
+        memcpy(packets[i].payload, block_of_buffer_to_packetize, (size_t) packets[i].payload_length);
+        packets[i].checksum = checksum(packets[i].payload, packets[i].payload_length);
+    }
+    
+    //create the last packet
+
+
+    
+
+    /* 3. The count variable points to an integer. Update this integer setting it equal to the length
+     *    of the array you are returning.
+     */
+    *count = numPacketsNeeded;
+
+    /* ----   END OF STUDENT CODE  ---- */
+
+    //4. Return the array of packets
     return packets;
 }
 
@@ -44,21 +104,28 @@ packet_t *packetize(char *buffer, int length, int *count) {
  * 
  * Compute a checksum based on the data in the buffer.
  * 
- * Checksum calcuation: Sum the ascii values of all charecters in the buffer, if the 
- * index is even, multiply the ascii value by the index, and return the total. 
+ * Checksum calculation: Sum the ASCII values of all characters in the buffer, if the
+ * index is even, multiply the ASCII value by the index, and return the total. 
  * 
  * Example: "abcd" checksum = (0 * a) + (b) + (2 * c) + (d)
  * 
  * @param buffer pointer to the char buffer that the checksum is calculated from
  * @param length length of the buffer
  * 
- * @returns calcuated checksum
+ * @returns calculated checksum
+ * TODO 2.1.1
  */
 int checksum(char *buffer, int length) {
+    /* ----  START OF STUDENT CODE ---- */
+    int checksum = 0;
+    for (int i = 0; i < length; i++) {
+        checksum += IS_ODD(i) ? //if the memory location is odd
+                    buffer[i] :          //if odd, then just add the ASCII value of the buffer at this index
+                    i * buffer[i];       //if even, add the ASCII value multiplied by the index
+    }
 
-    /* ----  FIXME  ---- */
-
-    return 0;
+    return checksum;
+    /* ----   END OF STUDENT CODE  ---- */
 }
 
 
@@ -75,6 +142,7 @@ static void *rtp_recv_thread(void *void_ptr) {
         int buffer_length = 0;
         char *buffer = NULL;
         packet_t packet;
+        packet_t *acknowledgement_packet;
 
         /* Put messages in buffer until the last packet is received  */
         do {
@@ -86,49 +154,97 @@ static void *rtp_recv_thread(void *void_ptr) {
                 break;
             }
 
-            /*  ----  FIXME  ----
-            *
-            * 1. check to make sure payload of packet is correct
-            * 2. send an ACK or a NACK, whichever is appropriate
-            * 3. if this is the last packet in a sequence of packets
-            *    and the payload was corrupted, make sure the loop
-            *    does not terminate
-            * 4. if the payload matches, add the payload to the buffer
-            */
+            /* TODO 2.2.1
+             *
+             * 1. check to make sure payload of packet is correct
+             * 2. send an ACK or a NACK, whichever is appropriate
+             * 3. if this is the last packet in a sequence of packets
+             *    and the payload was corrupted, make sure the loop
+             *    does not terminate
+             * 4. if the payload matches, add the payload to the buffer
+             */
+            if (packet.type == DATA || packet.type == LAST_DATA) {
+                acknowledgement_packet = calloc(1, sizeof(packet_t));
+                if (packet.checksum == checksum(packet.payload, packet.payload_length)) { //if successful, send ACK
+                    acknowledgement_packet->type = ACK; //send ACK
+
+                    //Add the payload to the buffer
+                    buffer = realloc(buffer, (size_t) (buffer_length + packet.payload_length)); //expand the buffer
+                    memcpy(buffer + buffer_length, packet.payload, (size_t) packet.payload_length);
+                    buffer_length += packet.payload_length;
+                } else { //unsuccessful transmission, send NACK and continue
+                    acknowledgement_packet->type = NACK; //send NACK
+
+                    if (packet.type == LAST_DATA) {
+//                        continue; //make sure to continue listening for more packets (since the corrected ones will be sent)
+                        packet.type = DATA;
+                    }
+                }
+                net_send_packet(connection->net_connection_handle, acknowledgement_packet);
+                free(acknowledgement_packet);
+            }
 
 
-            /*
-            *  What if the packet received is not a data packet?
-            *  If it is a NACK or an ACK, the sending thread should
-            *  be notified so that it can finish sending the message.
-            *   
-            *  1. add the necessary fields to the CONNECTION data structure
-            *     in rtp.h so that the sending thread has a way to determine
-            *     whether a NACK or an ACK was received
-            *  2. signal the sending thread that an ACK or a NACK has been
-            *     received.
-            */
+            /* TODO 2.2.2
+             *
+             *  What if the packet received is not a data packet?
+             *  If it is a NACK or an ACK, the sending thread should
+             *  be notified so that it can finish sending the message.
+             *
+             *  1. add the necessary fields to the CONNECTION data structure
+             *     in rtp.h so that the sending thread has a way to determine
+             *     whether a NACK or an ACK was received
+             *  2. signal the sending thread that an ACK or a NACK has been
+             *     received.
+             */
+            if (packet.type == ACK || packet.type == NACK) {
+                pthread_mutex_lock(&(connection->ack_mutex));
+
+                //1.) update acknowledgement_type
+                if (packet.type == ACK) {
+                    connection->acknowledgement_type = ACK;
+                } else {
+                    connection->acknowledgement_type = NACK;
+                }
+
+                //2.) signal to the sending thread that an ACK or a NACK has been sent
+                connection->message_status = SENT;
+                pthread_cond_signal(&(connection->ack_cond));
+                pthread_mutex_unlock(&(connection->ack_mutex));
+            }
 
 
         } while (packet.type != LAST_DATA);
 
+
+
+
+
+        /* TODO 2.3
+         *
+         * Now that an entire message has been received, we need to
+         * add it to the queue to provide to the rtp client.
+         *
+         * 1. Add message to the received queue.
+         * 2. Signal the client thread that a message has been received.
+         */
         if (connection->alive == 1) {
-            /*  ----  FIXME: Part II-C ----
-            *
-            * Now that an entire message has been received, we need to
-            * add it to the queue to provide to the rtp client.
-            *
-            * 1. Add message to the received queue.
-            * 2. Signal the client thread that a message has been received.
-            */
+            //1.) assemble the message
+            message = calloc(1, sizeof(message_t));
+            message->buffer = calloc((size_t) buffer_length, sizeof(char));
+            message->length = buffer_length;
+            memcpy(message->buffer, buffer, (size_t) message->length);
 
-
-        } else free(buffer);
-
+            //2.) send the message to the "send_queue" and signal to client thread to read message
+            pthread_mutex_lock(&(connection->recv_mutex));
+            queue_add(&connection->recv_queue, message);
+            pthread_cond_signal(&(connection->recv_cond));
+            pthread_mutex_unlock(&(connection->recv_mutex));
+        }
+        free(buffer); //free buffer regardless
     } while (connection->alive == 1);
 
     return NULL;
-
 }
 
 static void *rtp_send_thread(void *void_ptr) {
@@ -164,7 +280,7 @@ static void *rtp_send_thread(void *void_ptr) {
                 break;
             }
 
-            /*  ----FIX ME: Part II-D ---- 
+            /* TODO 2.4
              * 
              *  1. wait for the recv thread to notify you of when a NACK or
              *     an ACK has been received
@@ -174,8 +290,15 @@ static void *rtp_send_thread(void *void_ptr) {
              *  3. If it was an ACK, continue sending the packets.
              *  4. If it was a NACK, resend the last packet
              */
-
-
+            pthread_mutex_lock(&(connection->ack_mutex));
+            while (connection->message_status != SENT) { //1.) wait for message
+                pthread_cond_wait(&(connection->ack_cond), &(connection->ack_mutex));
+            }
+            connection->message_status = NOT_SENT; //reset message status
+            if (connection->acknowledgement_type == NACK) { //2.) check which ack_packet was sent
+                i--; //4.) decrement i so the loop resends the last packet
+            } //3.) else if ACK do nothing
+            pthread_mutex_unlock(&(connection->ack_mutex));
         }
 
         free(packet_array);
