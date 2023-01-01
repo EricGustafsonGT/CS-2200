@@ -1,0 +1,42 @@
+Circuit Sim Installation Quick Guide
+
+To download, go to https://www.roiatalla.com/public/CircuitSim/
+eric note: what's interesting is that in a different Canvas webpage for CS 2200 they say to go here: https://ra4king.github.io/CircuitSim/download
+
+Windows
+
+    1. Click on the hyper link "Windows/"
+    2. This will bring you to a page that contains download links for various versions of CircuitSim.
+    3. To download the most recent version, click "CircuitSim1.8.2.exe" which should be the last entry on the page.
+    4. Once downloaded, you should be able to simply open on the CircuitSim1.8.2.exe and if all goes correctly, CircuitSim should be working.
+    5. Feel free to move the CircuitSim1.8.2.exe to your desired folder for easy access.
+
+Mac
+
+    1. Click on the hyper link "Mac/"
+    2. This will bring you to a page that contains download links for various versions of CircuitSim
+    3. To download the most recent version click the last link "CircuitSim1.8.2.app.zip" to download the most recent version
+    4. This should download a zip file, if need be, unzip the file. This can be done by double clicking the zip file.
+    5. Another directory should appear called "out". Open/enter this directory
+    6. Right click the "CircuitSim1.8.2.app" application and select "Show Package Contents"
+    7. Right click on the directory "MacOS", move your mouse over "Services" and select "New Terminal At Folder"
+    8. Type or paste the command "chmod +x JavaAppLauncher" and press enter
+    9. Attempt to run the app
+        a. If it runs, Congratulations you're done!
+        b. If you get the error Unable to load Java Runtime Environment continue to the next step
+        c. If you get the error “CircuitSim1.8.2.app” cannot be opened because the developer cannot be verified.
+            1. Right click on the app and select open
+            2. Select "Open" on the pop up
+    10. Go to Java.com and download the most current version of java.
+    11. Congratulations the app should run! Feel free to relocate the app to wherever you want.
+
+Linux
+    1. Download CircuitSim1.8.2.jar (leave it compressed) and javafx. Make sure you are using java 11. I used Ubuntu 18.04, and I just did
+    sudo apt install default-jdk, and then
+    sudo apt install openjfx
+        *I believe that javafx doesn't come with the default-jdk install (maybe it does, I didn't spend much time looking at it). 
+    
+    2. Then, in the directory containing the CircuitSim1.8.2.jar, run the command
+    java -jar --module-path /usr/share/openjfx/lib --add-modules=javafx.base,javafx.controls,javafx.fxml CircuitSim1.8.2.jar
+
+    3. Then, CircuitSim should just open up.
